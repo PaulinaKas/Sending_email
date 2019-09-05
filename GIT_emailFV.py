@@ -22,6 +22,7 @@ root.title("Sending e-mail")
 Label(root, text='Please use below syntax:\n ;firm name; invoice no.; route; loading date / unloading date; number of CMR files; address for letters; other information \n', fg='#19334d').pack(padx=0)
 
 # Images for icons:
+
 path_to_pictures = '*PATH_TO_PICTURES*' #path where pictures are saved
 
 open_picture = PhotoImage(file = path_to_pictures + 'open1.gif')
