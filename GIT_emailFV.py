@@ -20,9 +20,11 @@ root = Tk()
 root.geometry('850x500') #sets size of root window
 root.title("Sending e-mail")
 Label(root, text='Please use below syntax:\n ;firm name; invoice no.; route; loading date / unloading date; number of CMR files; address for letters; other information \n', fg='#19334d').pack(padx=0)
+private_file = pd.read_excel('private.xlsx')
 
 # Images for icons:
-path_to_pictures = '*PATH_TO_PICTURES*' #path where pictures are saved
+
+path_to_pictures = private_file.iloc[0][1] #path where pictures are saved
 
 open_picture = PhotoImage(file = path_to_pictures + 'open1.gif')
 save_picture = PhotoImage(file = path_to_pictures + 'save1.gif')
@@ -60,7 +62,7 @@ def askopenfile():
 def asksaveasFile():
 	filedialog.asksaveasfile()
 
-file_that_must_be_opened = '*PATH_TO_DANE.TXT*'
+file_that_must_be_opened = private_file.iloc[6][1]
 
 def export1():
 	root.clipboard_clear()
@@ -189,29 +191,29 @@ def send1():
 			message = mail_body
 			msg.attach(MIMEText(message, 'html'))
 
-	body = Body('*PATH_TO_EXPORTED_CSV_FILE*',
-				'*PATH_TO_ATTACHMENTS_DIR*')
+	body = Body(private_file.iloc[7][1],
+				private_file.iloc[1][1])
 	body.creating_email()
 
 	class Sending(Body):
-		msg['From'] = '*SENDER_EMAIL_ADDRESS*' # sender's email
-		msg['To'] = '*RECEIVER_EMAIL_ADDRESS*' # receiver's email
+		msg['From'] = private_file.iloc[2][1] # sender's email
+		msg['To'] = private_file.iloc[8][1] # receiver's email
 		def __init__(self, password, file_to_remove, *args, **kwargs):
 			super().__init__(*args, **kwargs)
 			self.password = password # password for sender's email
 			self.file_to_remove = file_to_remove # abstract file which is created and removed automatically
 
 		def send_email(self):
-			server = smtplib.SMTP_SSL('*HOST*', 465) #host, port
+			server = smtplib.SMTP_SSL(private_file.iloc[3][1], 465) #host, port
 			server.ehlo()
 			server.login(msg['From'], self.password)
 			server.sendmail(msg['From'], msg['To'], msg.as_string())
 			server.quit()
 			shutil.copyfile(self.file_to_send, self.file_to_remove)
 
-	data_to_send = Sending('*EMAIL_PASSWORD*',
+	data_to_send = Sending(private_file.iloc[4][1],
 						   'file_to_remove.csv',
-						   '*PATH_TO_EXPORTED_CSV_FILE*',
+						   private_file.iloc[7][1],
 						   None)
 	data_to_send.send_email()
 
@@ -234,8 +236,8 @@ def send1():
 			os.remove(self.file_to_send)
 			os.rename(self.file_to_remove, self.file_to_send)
 
-	removing = Removing('*PATH_TO_ARCHIVAL_DIR*',
-						'*PATH_TO_EXPORTED_CSV_FILE*',
+	removing = Removing(private_file.iloc[5][1],
+						private_file.iloc[7][1],
 						'file_to_remove.csv')
 	removing.remove_and_close()
 
@@ -255,9 +257,9 @@ def send1():
 									os.remove(self.fv_dest_path + '.DS_Store')
 							shutil.move(self.fv_path + file, self.fv_dest_path)
 
-	moving = Moving('*PATH_TO_ATTACHMENTS_DIR*',
-					'*PATH_TO_ARCHIVAL_DIR*',
-					'*PATH_TO_EXPORTED_CSV_FILE*',
+	moving = Moving(private_file.iloc[1][1],
+					private_file.iloc[5][1],
+					private_file.iloc[7][1],
 					None)
 	moving.move()
 
@@ -271,7 +273,7 @@ def send1():
 	preparing.prepare()
 
 
-	os.remove('*PATH_TO_EXPORTED_CSV_FILE*') #removes file to save memory
+	os.remove(private_file.iloc[7][1]) #removes file to save memory
 
 def on_find(self):
 		t2 = Toplevel(root)
