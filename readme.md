@@ -21,6 +21,7 @@ The main functions are:
      - weekday-related title
      - formatted body using different colors depending on content of exported .csv file
      - attached particular attachments. After sending them the app moves sent attachments to a local archive directory.
+     
 Additionally, the app shows warning boxes in cases like exiting without saving or overwriting file.
      
 ## **Technologies**:
