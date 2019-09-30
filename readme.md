@@ -57,3 +57,9 @@ Python 3.7.4
  6. Send e-mail by clicking on the last button. 
 
 That's all ;)
+
+## **Status**:
+
+The next steps will be:
+1. adding a window converting foreign exchange rates
+2. transfer excel database into sql one and keep using related database for further work
