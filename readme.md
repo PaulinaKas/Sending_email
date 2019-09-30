@@ -1,7 +1,7 @@
 # Sending e-mails app
 #### Dedicated app sending e-mails with formatted body and special attachments.
 
-![Interface of this app](readme_image.png)
+<img src="readme_image.png" width="700">
 
 ## Table of contents:
 #### * General info
