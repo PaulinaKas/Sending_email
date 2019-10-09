@@ -25,7 +25,8 @@ The main functions are:
 Additionally, the app shows warning boxes in cases like exiting without saving or overwriting file.
      
 ## **Technologies**:
-Python 3.7.4
+- Python 3.7.4
+- HTML 
 
 ### Libraries and packages which have been used:
  - os
