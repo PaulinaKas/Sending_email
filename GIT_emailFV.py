@@ -157,7 +157,7 @@ def sendBig():
 							6: 'niedzielę',
 							7: 'niedzielę',}
 		def __init__(self, weekday):
-			self.weekDay = weekday
+			self.weekday = weekday
 
 		def createSubject(self):
 			return f"Fakturki na {Subject.weekDictionary.get(self.weekday)}"
