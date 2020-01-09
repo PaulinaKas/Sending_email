@@ -25,8 +25,14 @@ sensitiveData = pd.read_excel('private.xlsx')
 
 iconsPath = sensitiveData.iloc[0][1]
 attachmentsDirectory = sensitiveData.iloc[1][1]
+senderMailAddress = sensitiveData.iloc[2][1]
+senderMailPassword = sensitiveData.iloc[4][1]
+hostofSenderMail = sensitiveData.iloc[3][1]
+receiverMailAddress = sensitiveData.iloc[8][1]
 fileToOpen = sensitiveData.iloc[6][1]
 contentToSend = sensitiveData.iloc[7][1]
+archiveForAttachmentsPath = sensitiveData.iloc[5][1]
+
 
 
 '''Images for icons:'''
@@ -204,50 +210,50 @@ def sendBig():
 	body.createBody()
 
 	class Sending(Body):
-		msg['From'] = sensitiveData.iloc[2][1] # sender's email
-		msg['To'] = sensitiveData.iloc[8][1] # receiver's email
-		def __init__(self, password, file_to_remove, *args, **kwargs):
+		msg['From'] = senderMailAddress
+		msg['To'] = receiverMailAddress
+		def __init__(self, senderMailPassword, fileToAutoRemove, *args, **kwargs):
 			super().__init__(*args, **kwargs)
-			self.password = password # password for sender's email
-			self.file_to_remove = file_to_remove # abstract file which is created and removed automatically
+			self.senderMailPassword = senderMailPassword
+			self.fileToAutoRemove = fileToAutoRemove # abstract file which is created and removed automatically (see Removing class)
 
-		def send_email(self):
-			server = smtplib.SMTP_SSL(sensitiveData.iloc[3][1], 465) #host, port
+		def sendMail(self):
+			server = smtplib.SMTP_SSL(hostofSenderMail, 465) # 465 is a port for sender's mail
 			server.ehlo()
-			server.login(msg['From'], self.password)
+			server.login(msg['From'], self.senderMailPassword)
 			server.sendmail(msg['From'], msg['To'], msg.as_string())
 			server.quit()
-			shutil.copyfile(self.contentToSend, self.file_to_remove)
+			shutil.copyfile(self.contentToSend, self.fileToAutoRemove)
 
-	data_to_send = Sending(sensitiveData.iloc[4][1],
-						   'file_to_remove.csv',
-						   contentToSend,
-						   None)
-	data_to_send.send_email()
+	sendingObject = Sending(senderMailPassword,
+						  'fileToAutoRemove.csv',
+						  contentToSend,
+						  None)
+	sendingObject.sendMail()
 
 	class Removing:
-		def __init__(self, fv_dest_path, contentToSend, file_to_remove):
-			self.fv_dest_path = fv_dest_path # path for archival directory
-			self.contentToSend = contentToSend # path for CSV file where data to sent has been imported
-			self.file_to_remove = file_to_remove # abstract file which is created and removed automatically
+		def __init__(self, archiveForAttachmentsPath, contentToSend, fileToAutoRemove):
+			self.archiveForAttachmentsPath = archiveForAttachmentsPath
+			self.contentToSend = contentToSend
+			self.fileToAutoRemove = fileToAutoRemove
 
-		def remove_and_close(self):
-			csvfile = open(self.contentToSend, 'r', encoding='utf-8')
-			csv_file = csv.reader(csvfile, delimiter=';')
-			ofile = open(self.file_to_remove, 'w', encoding='utf-8', newline='')
-			writer = csv.writer(ofile,  delimiter=';')
-			for row in csv_file:
+		def removeAbstractFile(self):
+			openedContentToSend = open(self.contentToSend, 'r', encoding='utf-8')
+			readContent = csv.reader(openedContentToSend, delimiter=';')
+			openedFileToAutoRemove = open(self.fileToAutoRemove, 'w', encoding='utf-8', newline='')
+			writer = csv.writer(openedFileToAutoRemove,  delimiter=';')
+			for row in readContent:
 				row[0]='sent'
 				writer.writerow(row)
-			csvfile.close()
-			ofile.close()
+			openedContentToSend.close()
+			openedFileToAutoRemove.close()
 			os.remove(self.contentToSend)
-			os.rename(self.file_to_remove, self.contentToSend)
+			os.rename(self.fileToAutoRemove, self.contentToSend)
 
-	removing = Removing(sensitiveData.iloc[5][1],
+	removing = Removing(archiveForAttachmentsPath,
 						contentToSend,
-						'file_to_remove.csv')
-	removing.remove_and_close()
+						'fileToAutoRemove.csv')
+	removing.removeAbstractFile()
 
 	class Moving(Removing):
 		def __init__(self, attachmentsDirectory, *args, **kwargs):
@@ -261,12 +267,12 @@ def sendBig():
 					InvoiceNumber = '*' + str.lstrip(item[2]) + '*'
 					for file in os.listdir(self.attachmentsDirectory):
 						if fnmatch.fnmatch(file, InvoiceNumber):
-							if '.DS_Store' in self.fv_dest_path:
-									os.remove(self.fv_dest_path + '.DS_Store')
-							shutil.move(self.attachmentsDirectory + file, self.fv_dest_path)
+							if '.DS_Store' in self.archiveForAttachmentsPath:
+									os.remove(self.archiveForAttachmentsPath + '.DS_Store')
+							shutil.move(self.attachmentsDirectory + file, self.archiveForAttachmentsPath)
 
 	moving = Moving(attachmentsDirectory,
-					sensitiveData.iloc[5][1],
+					archiveForAttachmentsPath,
 					contentToSend,
 					None)
 	moving.move()
