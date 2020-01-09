@@ -68,19 +68,19 @@ def exportBig():
 	Info:
 	Something like '---------------------------------' separates content
 	to send from content that has been send last time.
-	Below variable "index" is set of rows that equal to '---------------------------------'.
+	Below variable "separatingIndex" is set of rows that equal to '---------------------------------'.
 	Thanks to it program can distinguish last new content that must be send.
 	'''
 	root.clipboard_clear()
 	with open(fileToBeEditing, encoding='utf-8') as file:
 		fileContent = file.readlines()
-		index = [x for x in range(len(fileContent)) if '---------------------------------' in fileContent[x]]
-	filename = filedialog.asksaveasfile(initialfile='export.csv', mode='w', defaultextension='.csv')
-	if filename is None:
+		separatingIndex = [x for x in range(len(fileContent)) if '---------------------------------' in fileContent[x]]
+	fileToSave = filedialog.asksaveasfile(initialfile='export.csv', mode='w', defaultextension='.csv')
+	if fileToSave is None:
 		return
-	textoutput = textPad.get(float(index[-1]+2), 'end')
-	filename.write(textoutput)
-	filename.close()
+	newContent = textPad.get(float(separatingIndex[-1]+2), END)
+	fileToSave.write(newContent)
+	fileToSave.close()
 
 def exit_editor(event=None):
 	if messagebox.askokcancel("Quit?", "Do you really want to exit?", icon = 'warning'):
@@ -106,7 +106,7 @@ def save_as_function():
 
 def saveBig():
 	f = open(fileToBeEditing, 'w')
-	letter = textPad.get(1.0, 'end')
+	letter = textPad.get(1.0, END)
 	f.write(letter)
 	MsgBox = messagebox.askquestion('Warning','Are you sure you want to overwrite the file?', icon = 'warning')
 	if MsgBox == 'Yes':
@@ -121,7 +121,7 @@ def saveBig():
 def write_to_file(file_name):
 	file_name = None
 	try:
-		fileContent = content_text.get(1.0, 'end')
+		fileContent = content_text.get(1.0, END)
 		with open(file_name, 'w') as the_file:
 			the_file.write(fileContent)
 	except IOError:
