@@ -19,7 +19,7 @@ from PIL import Image
 root = Tk()
 root.geometry('850x500') #sets size of root window
 root.title("Sending e-mail")
-Label(root, text='Please use below syntax:\n ;firm name; invoice no.; route; loading date / unloading date; number of CMR files; address for letters; other information \n', fg='#19334d').pack(padx=0)
+Label(root, text='Please use below syntax:\n ;firm name; invoice no.; route; loading date / unloading date; number of CMR files; postal address; other information \n', fg='#19334d').pack(padx=0)
 private_file = pd.read_excel('private.xlsx')
 
 # Images for icons:
