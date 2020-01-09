@@ -21,10 +21,11 @@ root.geometry('850x500') # sets size of root window
 root.title("Sending e-mail")
 Label(root, text='Please use below syntax:\n ;firm name; invoice no.; route; loading date / unloading date; number of CMR files; postal address; other information \n', fg='#19334d').pack(padx=0)
 sensitiveData = pd.read_excel('private.xlsx')
+iconsPath = sensitiveData.iloc[0][1]
+fileToBeEditing = sensitiveData.iloc[6][1]
+
 
 '''Images for icons:'''
-
-iconsPath = sensitiveData.iloc[0][1]
 
 openButtonIcon = PhotoImage(file = iconsPath + 'openBig.gif')
 saveButtonIcon = PhotoImage(file = iconsPath + 'saveBig.gif')
@@ -61,8 +62,6 @@ def askopenfile():
 def asksaveasFile():
 	filedialog.asksaveasfile()
 
-fileToBeEditing = sensitiveData.iloc[6][1]
-
 def exportBig():
 	'''
 	Info:
@@ -88,7 +87,6 @@ def exit_editor(event=None):
 
 def new_file(self):
 	root.title("Untitled")
-	filename = None
 	textPad.delete(1.0,END)
 
 def openBig():
