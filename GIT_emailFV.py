@@ -20,9 +20,13 @@ root = Tk()
 root.geometry('850x500') # sets size of root window
 root.title("Sending e-mail")
 Label(root, text='Please use below syntax:\n ;firm name; invoice no.; route; loading date / unloading date; number of CMR files; postal address; other information \n', fg='#19334d').pack(padx=0)
+
 sensitiveData = pd.read_excel('private.xlsx')
+
 iconsPath = sensitiveData.iloc[0][1]
+attachmentsDirectory = sensitiveData.iloc[1][1]
 fileToOpen = sensitiveData.iloc[6][1]
+contentToSend = sensitiveData.iloc[7][1]
 
 
 '''Images for icons:'''
@@ -103,9 +107,9 @@ def save_as_function():
 	fileToSave.close()
 
 def saveBig():
-	f = open(fileToOpen, 'w')
-	letter = textPad.get(1.0, END)
-	f.write(letter)
+	openedFile = open(fileToOpen, 'w')
+	fromFirstLineContent = textPad.get(1.0, END)
+	openedFile.write(fromFirstLineContent)
 	MsgBox = messagebox.askquestion('Warning','Are you sure you want to overwrite the file?', icon = 'warning')
 	if MsgBox == 'Yes':
 		try:
@@ -115,88 +119,89 @@ def saveBig():
 	if MsgBox == 'No':
 		messagebox.showinfo('No','You will now return to the application screen')
 
-# Function thad is needed for "save_menu_bar"
-def write_to_file(file_name):
-	file_name = None
+# Function that is needed for "save_menu_bar"
+def write_to_file(fileToWrite):
+	fileToWrite = None
 	try:
-		fileContent = content_text.get(1.0, END)
-		with open(file_name, 'w') as the_file:
-			the_file.write(fileContent)
+		fromFirstLineContent = content_text.get(1.0, END)
+		with open(file_name, 'w') as file:
+			file.write(fromFirstLineContent)
 	except IOError:
 		tkinter.messagebox.showwarning("Save", "Could not save the file.")
 
 def save_menu_bar(event=None):
-	file_name = None
+	fileToWrite = None
 	if not file_name:
 		save_as_function()
 	else:
-		write_to_file(file_name)
+		write_to_file(fileToWrite)
 	return "break"
 
-# below is a big function which sends e-mail with proper title, body and attachments.
-# in addition "send1" function moves sent attachments to archival directory
-def sendBig():
-	class Subject:
-		subject_dict = {1: 'wtorek',
-						2: 'środę',
-						3: 'czwartek',
-						4: 'piątek',
-						5: 'niedzielę',
-						6: 'niedzielę',
-						7: 'niedzielę'}
-		def __init__(self, day_of_the_week):
-			self.day_of_the_week = day_of_the_week
 
-		def creating_subject(self):
-			return f"Fakturki na {Subject.subject_dict.get(self.day_of_the_week)}"
+def sendBig():
+	'''
+	Below is a big function which sends e-mail with proper title, body and attachments.
+	'''
+	class Subject:
+		weekDictionary = {	1: 'wtorek',
+							2: 'środę',
+							3: 'czwartek',
+							4: 'piątek',
+							5: 'niedzielę',
+							6: 'niedzielę',
+							7: 'niedzielę',}
+		def __init__(self, weekday):
+			self.weekDay = weekday
+
+		def createSubject(self):
+			return f"Fakturki na {Subject.weekDictionary.get(self.weekday)}"
 
 	subject = Subject(date.today().isoweekday())
-	subject.creating_subject()
-
 	msg = MIMEMultipart()
-	msg['Subject'] = subject.creating_subject()
+	msg['Subject'] = subject.createSubject()
 
 	class Body:
-		def __init__(self, file_to_send, fv_path):
-			self.file_to_send = file_to_send # path for "Dane.txt"
-			self.fv_path = fv_path # path for directory where the invoices to be sent are located
+		def __init__(self, contentToSend, attachmentsDirectory):
+			self.contentToSend = contentToSend
+			self.attachmentsDirectory = attachmentsDirectory
 
-		def creating_email(self):
-			mail_body = '<font face="verdana, monospace">' + "Cześć tatuś, oto fakturki :)" + \
+		def createBody(self):
+			mailBody = '<font face="verdana, monospace">' + "Cześć tatuś, oto fakturki :)" + \
 					  '</font>' +  "<br>"
-			with open(self.file_to_send, encoding='utf-8') as csvfile:
-				csv_file = csv.reader(csvfile, delimiter =';')
+			with open(self.contentToSend, encoding='utf-8') as file:
+				content = csv.reader(file, delimiter =';')
 
-				for item in csv_file:
-					if item[0] != 'sent':
-						mail_body += '<font face="verdana, monospace">' + "<br>" + \
-						"   - " + '<b>' + item[1] + ' '+ '</b>' + item[2] + ' ' + \
-						item[3] + ' ' + item[4] + '<b>' + '<font color="MidnightBlue">' + \
-						item[5] + ' ' + '</font>' + '<font color="MediumVioletRed">' + \
-						item [6] + ' ' +  '<font color="OrangeRed">' + item[7] + ' ' + \
+				for row in content:
+					if row[0] != 'sent':
+						mailBody += '<font face="verdana, monospace">' + "<br>" + \
+						"   - " + '<b>' + row[1] + ' '+ '</b>' + row[2] + ' ' + \
+						row[3] + ' ' + row[4] + '<b>' + '<font color="MidnightBlue">' + \
+						row[5] + ' ' + '</font>' + '<font color="MediumVioletRed">' + \
+						row [6] + ' ' +  '<font color="OrangeRed">' + row[7] + ' ' + \
 						'</font>' + '</font>' + '</b> <br>'
-						bezspacji = '*' + str.lstrip(item[2]) + '*'
-						found = 0
-						for file in os.listdir(self.fv_path):
-							if fnmatch.fnmatch(file, bezspacji):
-								fv_folder_path = os.path.join(self.fv_path, file)
-								fp = open(fv_folder_path, 'rb')
+
+						# row[2] is the invoice number
+						InvoiceNumber = '*' + str.lstrip(row[2]) + '*' # removes spaces to the left of the row[2]
+						for doc in os.listdir(self.attachmentsDirectory):
+							if fnmatch.fnmatch(doc, InvoiceNumber):
+								attachmentPath = os.path.join(self.attachmentsDirectory, doc)
+								openedAttachmentPath = open(attachmentPath, 'rb')
 								part = MIMEBase('application', 'octet-stream')
-								part.set_payload(fp.read())
-								fp.close()
+								part.set_payload(openedAttachmentPath.read())
+								openedAttachmentPath.close()
 								encoders.encode_base64(part)
 								part.add_header('Content-Disposition',
 												'attachment',
-												filename = os.path.basename(file))
+												filename = os.path.basename(doc))
 								msg.attach(part)
-								found = 1
 
-			message = mail_body
+			message = mailBody
 			msg.attach(MIMEText(message, 'html'))
 
-	body = Body(sensitiveData.iloc[7][1],
-				sensitiveData.iloc[1][1])
-	body.creating_email()
+
+	body = Body(contentToSend,
+				attachmentsDirectory)
+	body.createBody()
 
 	class Sending(Body):
 		msg['From'] = sensitiveData.iloc[2][1] # sender's email
@@ -212,22 +217,22 @@ def sendBig():
 			server.login(msg['From'], self.password)
 			server.sendmail(msg['From'], msg['To'], msg.as_string())
 			server.quit()
-			shutil.copyfile(self.file_to_send, self.file_to_remove)
+			shutil.copyfile(self.contentToSend, self.file_to_remove)
 
 	data_to_send = Sending(sensitiveData.iloc[4][1],
 						   'file_to_remove.csv',
-						   sensitiveData.iloc[7][1],
+						   contentToSend,
 						   None)
 	data_to_send.send_email()
 
 	class Removing:
-		def __init__(self, fv_dest_path, file_to_send, file_to_remove):
+		def __init__(self, fv_dest_path, contentToSend, file_to_remove):
 			self.fv_dest_path = fv_dest_path # path for archival directory
-			self.file_to_send = file_to_send # path for CSV file where data to sent has been imported
+			self.contentToSend = contentToSend # path for CSV file where data to sent has been imported
 			self.file_to_remove = file_to_remove # abstract file which is created and removed automatically
 
 		def remove_and_close(self):
-			csvfile = open(self.file_to_send, 'r', encoding='utf-8')
+			csvfile = open(self.contentToSend, 'r', encoding='utf-8')
 			csv_file = csv.reader(csvfile, delimiter=';')
 			ofile = open(self.file_to_remove, 'w', encoding='utf-8', newline='')
 			writer = csv.writer(ofile,  delimiter=';')
@@ -236,33 +241,33 @@ def sendBig():
 				writer.writerow(row)
 			csvfile.close()
 			ofile.close()
-			os.remove(self.file_to_send)
-			os.rename(self.file_to_remove, self.file_to_send)
+			os.remove(self.contentToSend)
+			os.rename(self.file_to_remove, self.contentToSend)
 
 	removing = Removing(sensitiveData.iloc[5][1],
-						sensitiveData.iloc[7][1],
+						contentToSend,
 						'file_to_remove.csv')
 	removing.remove_and_close()
 
 	class Moving(Removing):
-		def __init__(self, fv_path, *args, **kwargs):
-			self.fv_path = fv_path
+		def __init__(self, attachmentsDirectory, *args, **kwargs):
+			self.attachmentsDirectory = attachmentsDirectory
 			super().__init__(*args, **kwargs)
 
 		def move(self):
-			with open(self.file_to_send, encoding='utf-8') as csvfile:
+			with open(self.contentToSend, encoding='utf-8') as csvfile:
 				csv_file = csv.reader(csvfile, delimiter =';')
 				for item in csv_file:
-					bezspacji = '*' + str.lstrip(item[2]) + '*'
-					for file in os.listdir(self.fv_path):
-						if fnmatch.fnmatch(file, bezspacji):
+					InvoiceNumber = '*' + str.lstrip(item[2]) + '*'
+					for file in os.listdir(self.attachmentsDirectory):
+						if fnmatch.fnmatch(file, InvoiceNumber):
 							if '.DS_Store' in self.fv_dest_path:
 									os.remove(self.fv_dest_path + '.DS_Store')
-							shutil.move(self.fv_path + file, self.fv_dest_path)
+							shutil.move(self.attachmentsDirectory + file, self.fv_dest_path)
 
-	moving = Moving(sensitiveData.iloc[1][1],
+	moving = Moving(attachmentsDirectory,
 					sensitiveData.iloc[5][1],
-					sensitiveData.iloc[7][1],
+					contentToSend,
 					None)
 	moving.move()
 
@@ -276,7 +281,7 @@ def sendBig():
 	preparing.prepare()
 
 
-	os.remove(sensitiveData.iloc[7][1]) #removes file to save memory
+	os.remove(contentToSend) #removes file to save memory
 
 def on_find(self):
 		t2 = Toplevel(root)
