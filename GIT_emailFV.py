@@ -22,7 +22,7 @@ root.title("Sending e-mail")
 Label(root, text='Please use below syntax:\n ;firm name; invoice no.; route; loading date / unloading date; number of CMR files; postal address; other information \n', fg='#19334d').pack(padx=0)
 sensitiveData = pd.read_excel('private.xlsx')
 iconsPath = sensitiveData.iloc[0][1]
-fileToBeEditing = sensitiveData.iloc[6][1]
+fileToOpen = sensitiveData.iloc[6][1]
 
 
 '''Images for icons:'''
@@ -71,15 +71,15 @@ def exportBig():
 	Thanks to it program can distinguish last new content that must be send.
 	'''
 	root.clipboard_clear()
-	with open(fileToBeEditing, encoding='utf-8') as file:
+	with open(fileToOpen, encoding='utf-8') as file:
 		fileContent = file.readlines()
 		separatingIndex = [x for x in range(len(fileContent)) if '---------------------------------' in fileContent[x]]
-	fileToSave = filedialog.asksaveasfile(initialfile='export.csv', mode='w', defaultextension='.csv')
-	if fileToSave is None:
+	fileToExport = filedialog.asksaveasfile(initialfile='export.csv', mode='w', defaultextension='.csv')
+	if fileToExport is None:
 		return
 	newContent = textPad.get(float(separatingIndex[-1]+2), END)
-	fileToSave.write(newContent)
-	fileToSave.close()
+	fileToExport.write(newContent)
+	fileToExport.close()
 
 def exit_editor(event=None):
 	if messagebox.askokcancel("Quit?", "Do you really want to exit?", icon = 'warning'):
@@ -90,20 +90,20 @@ def new_file(self):
 	textPad.delete(1.0,END)
 
 def openBig():
-	filename = open(fileToBeEditing)
-	for line in filename:
+	fileContent = open(fileToOpen)
+	for line in fileContent:
 		textPad.insert(END, line)
 
 def save_as_function():
-	filename = filedialog.asksaveasfile(mode='w', defaultextension='.txt')
-	if filename is None:
+	fileToSave = filedialog.asksaveasfile(mode='w', defaultextension='.txt')
+	if fileToSave is None:
 		return
-	textoutput = textPad.get(0.0, END)
-	filename.write(textoutput)
-	filename.close()
+	wholeContent = textPad.get(0.0, END)
+	fileToSave.write(wholeContent)
+	fileToSave.close()
 
 def saveBig():
-	f = open(fileToBeEditing, 'w')
+	f = open(fileToOpen, 'w')
 	letter = textPad.get(1.0, END)
 	f.write(letter)
 	MsgBox = messagebox.askquestion('Warning','Are you sure you want to overwrite the file?', icon = 'warning')
@@ -272,7 +272,7 @@ def sendBig():
 		def prepare(self):
 			with open(self.file_to_edit, 'a') as txtfile:
 				txtfile.write('---------------------------------')
-	preparing = Preparing(fileToBeEditing)
+	preparing = Preparing(fileToOpen)
 	preparing.prepare()
 
 
