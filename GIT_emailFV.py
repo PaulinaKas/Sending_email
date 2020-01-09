@@ -56,7 +56,7 @@ def copy():
 def paste():
 	textPad.event_generate("<<Paste>>")
 
-# defining functions that will be needed for "export1()" and "":
+# defining functions that will be needed for "exportBig()" and "":
 def askopenfile():
 	filedialog.askopenfile(mode='r')
 def asksaveasFile():
@@ -316,9 +316,9 @@ menubar = Menu(root)
 # File menu
 filemenu = Menu(menubar, tearoff=0 )
 filemenu.add_command(label = "New (clear screen)", accelerator = 'Cmd+N', compound = LEFT, image = small_new, underline = 0, command = new_file)
-filemenu.add_command(label = "Save", accelerator = 'Cmd+S',compound = LEFT, image = small_save,underline = 0, command=save1)
+filemenu.add_command(label = "Save", accelerator = 'Cmd+S',compound = LEFT, image = small_save,underline = 0, command=saveBig)
 filemenu.add_command(label = "Save as",accelerator = 'Shift+Ctrl+S', compound = LEFT, image = small_save_as,underline = 0, command=save_as_function)
-filemenu.add_command(label = "Export to CSV",accelerator = 'Ctrl+E', compound = LEFT, image = small_export,underline = 0, command=export1)
+filemenu.add_command(label = "Export to CSV",accelerator = 'Ctrl+E', compound = LEFT, image = small_export,underline = 0, command=exportBig)
 filemenu.add_separator()
 filemenu.add_command(label = "Exit", accelerator = 'Alt+F4', compound = LEFT, image = small_exit,underline = 0, command = exit_editor)
 menubar.add_cascade(label = "File", menu = filemenu) # all file menu choices will be placed here
@@ -354,8 +354,8 @@ root.bind('<Command-f>', on_find)
 root.bind('<Command-F>', on_find)
 root.bind('<Command-N>', new_file)
 root.bind('<Command-n>', new_file)
-root.bind('<Command-S>', save1)
-root.bind('<Command-s>', save1)
+root.bind('<Command-S>', saveBig)
+root.bind('<Command-s>', saveBig)
 
 
 # toolbar
