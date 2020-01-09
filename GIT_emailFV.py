@@ -24,25 +24,25 @@ sensitiveData = pd.read_excel('private.xlsx')
 
 # Images for icons:
 
-path_to_pictures = sensitiveData.iloc[0][1] 
+iconsPath = sensitiveData.iloc[0][1]
 
-open_picture = PhotoImage(file = path_to_pictures + 'open1.gif')
-save_picture = PhotoImage(file = path_to_pictures + 'save1.gif')
-send_picture = PhotoImage(file = path_to_pictures + 'send1.gif')
-export_picture = PhotoImage(file = path_to_pictures + 'export1.gif')
-small_save_as = PhotoImage(file = path_to_pictures + 'save_as.gif')
-small_exit = PhotoImage(file = path_to_pictures + 'exit.gif')
-small_undo = PhotoImage(file = path_to_pictures + 'undo.gif')
-small_redo = PhotoImage(file = path_to_pictures + 'redo.gif')
-small_cut = PhotoImage(file = path_to_pictures + 'cut.gif')
-small_copy = PhotoImage(file = path_to_pictures + 'copy.gif')
-small_paste = PhotoImage(file = path_to_pictures + 'paste.gif')
-small_find = PhotoImage(file = path_to_pictures + 'find.gif')
-small_new = PhotoImage(file = path_to_pictures + 'new.gif')
-small_send = PhotoImage(file = path_to_pictures + 'send.gif')
+open_picture = PhotoImage(file = iconsPath + 'open1.gif')
+save_picture = PhotoImage(file = iconsPath + 'save1.gif')
+send_picture = PhotoImage(file = iconsPath + 'send1.gif')
+export_picture = PhotoImage(file = iconsPath + 'export1.gif')
+small_save_as = PhotoImage(file = iconsPath + 'save_as.gif')
+small_exit = PhotoImage(file = iconsPath + 'exit.gif')
+small_undo = PhotoImage(file = iconsPath + 'undo.gif')
+small_redo = PhotoImage(file = iconsPath + 'redo.gif')
+small_cut = PhotoImage(file = iconsPath + 'cut.gif')
+small_copy = PhotoImage(file = iconsPath + 'copy.gif')
+small_paste = PhotoImage(file = iconsPath + 'paste.gif')
+small_find = PhotoImage(file = iconsPath + 'find.gif')
+small_new = PhotoImage(file = iconsPath + 'new.gif')
+small_send = PhotoImage(file = iconsPath + 'send.gif')
 # resizing the existing pictures (icons in menu must be smaller than icons in toolbar)
-small_export = PhotoImage(file = path_to_pictures + 'export2.gif').subsample(3,3)
-small_save = PhotoImage(file = path_to_pictures + 'save2.gif').subsample(3,3)
+small_export = PhotoImage(file = iconsPath + 'export2.gif').subsample(3,3)
+small_save = PhotoImage(file = iconsPath + 'save2.gif').subsample(3,3)
 
 # defining "Edit" functions
 def undo():
