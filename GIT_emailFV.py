@@ -26,7 +26,7 @@ sensitiveData = pd.read_excel('private.xlsx')
 
 iconsPath = sensitiveData.iloc[0][1]
 
-open_picture = PhotoImage(file = iconsPath + 'open1.gif')
+open_picture = PhotoImage(file = iconsPath + 'open.gif')
 save_picture = PhotoImage(file = iconsPath + 'save1.gif')
 send_picture = PhotoImage(file = iconsPath + 'send1.gif')
 export_picture = PhotoImage(file = iconsPath + 'export1.gif')
@@ -86,7 +86,7 @@ def new_file(self):
 	filename = None
 	textPad.delete(1.0,END)
 
-def open1():
+def open():
 	filename = open(file_that_must_be_opened)
 	for line in filename:
 		textPad.insert(END, line)
@@ -360,7 +360,7 @@ root.bind('<Command-s>', save1)
 
 # toolbar
 shortcutbar = Frame(root, height=25, bg='gainsboro')
-icons = ['open1', 'save1', 'export1', 'send1']
+icons = ['open', 'save1', 'export1', 'send1']
 for i, icon in enumerate(icons):
 	tbicon = PhotoImage(file='pictures/'+icon+'.gif')
 	cmd = eval(icon)
