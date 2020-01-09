@@ -17,12 +17,12 @@ from datetime import date
 from PIL import Image
 
 root = Tk()
-root.geometry('850x500') #sets size of root window
+root.geometry('850x500') # sets size of root window
 root.title("Sending e-mail")
 Label(root, text='Please use below syntax:\n ;firm name; invoice no.; route; loading date / unloading date; number of CMR files; postal address; other information \n', fg='#19334d').pack(padx=0)
 sensitiveData = pd.read_excel('private.xlsx')
 
-# Images for icons:
+'''Images for icons:'''
 
 iconsPath = sensitiveData.iloc[0][1]
 
@@ -30,7 +30,6 @@ openButtonIcon = PhotoImage(file = iconsPath + 'openBig.gif')
 saveButtonIcon = PhotoImage(file = iconsPath + 'saveBig.gif')
 sendButtonIcon = PhotoImage(file = iconsPath + 'sendBig.gif')
 exportButtonIcon = PhotoImage(file = iconsPath + 'exportBig.gif')
-
 saveAsMenuIcon = PhotoImage(file = iconsPath + 'save_as.gif')
 exitMenuIcon = PhotoImage(file = iconsPath + 'exit.gif')
 undoMenuIcon = PhotoImage(file = iconsPath + 'undo.gif')
@@ -62,14 +61,14 @@ def askopenfile():
 def asksaveasFile():
 	filedialog.asksaveasfile()
 
-file_that_must_be_opened = sensitiveData.iloc[6][1]
+fileToBeEditing = sensitiveData.iloc[6][1]
 
 def exportBig():
 	root.clipboard_clear()
-	with open(file_that_must_be_opened, encoding='utf-8') as f:
-		content = f.readlines()
+	with open(fileToBeEditing, encoding='utf-8') as file:
+		fileContent = file.readlines()
 		# '---------------------------------' separates content of emails to send
-		index = [x for x in range(len(content)) if '---------------------------------' in content[x].lower()]
+		index = [x for x in range(len(fileContent)) if '---------------------------------' in fileContent[x]]
 	filename = filedialog.asksaveasfile(initialfile='export.csv', mode='w', defaultextension='.csv')
 	if filename is None:
 		return
@@ -87,7 +86,7 @@ def new_file(self):
 	textPad.delete(1.0,END)
 
 def openBig():
-	filename = open(file_that_must_be_opened)
+	filename = open(fileToBeEditing)
 	for line in filename:
 		textPad.insert(END, line)
 
@@ -100,7 +99,7 @@ def save_as_function():
 	filename.close()
 
 def saveBig():
-	f = open(file_that_must_be_opened, 'w')
+	f = open(fileToBeEditing, 'w')
 	letter = textPad.get(1.0, 'end')
 	f.write(letter)
 	MsgBox = messagebox.askquestion('Warning','Are you sure you want to overwrite the file?', icon = 'warning')
@@ -116,9 +115,9 @@ def saveBig():
 def write_to_file(file_name):
 	file_name = None
 	try:
-		content = content_text.get(1.0, 'end')
+		fileContent = content_text.get(1.0, 'end')
 		with open(file_name, 'w') as the_file:
-			the_file.write(content)
+			the_file.write(fileContent)
 	except IOError:
 		tkinter.messagebox.showwarning("Save", "Could not save the file.")
 
@@ -269,7 +268,7 @@ def sendBig():
 		def prepare(self):
 			with open(self.file_to_edit, 'a') as txtfile:
 				txtfile.write('---------------------------------')
-	preparing = Preparing(file_that_must_be_opened)
+	preparing = Preparing(fileToBeEditing)
 	preparing.prepare()
 
 
