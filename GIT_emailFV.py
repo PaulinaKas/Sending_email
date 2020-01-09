@@ -31,20 +31,18 @@ saveButtonIcon = PhotoImage(file = iconsPath + 'saveBig.gif')
 sendButtonIcon = PhotoImage(file = iconsPath + 'sendBig.gif')
 exportButtonIcon = PhotoImage(file = iconsPath + 'exportBig.gif')
 
-
-small_save_as = PhotoImage(file = iconsPath + 'save_as.gif')
-small_exit = PhotoImage(file = iconsPath + 'exit.gif')
-small_undo = PhotoImage(file = iconsPath + 'undo.gif')
-small_redo = PhotoImage(file = iconsPath + 'redo.gif')
-small_cut = PhotoImage(file = iconsPath + 'cut.gif')
-small_copy = PhotoImage(file = iconsPath + 'copy.gif')
-small_paste = PhotoImage(file = iconsPath + 'paste.gif')
-small_find = PhotoImage(file = iconsPath + 'find.gif')
-small_new = PhotoImage(file = iconsPath + 'new.gif')
-small_send = PhotoImage(file = iconsPath + 'send.gif')
-# resizing the existing pictures (icons in menu must be smaller than icons in toolbar)
-small_export = PhotoImage(file = iconsPath + 'export2.gif').subsample(3,3)
-small_save = PhotoImage(file = iconsPath + 'save2.gif').subsample(3,3)
+saveAsMenuIcon = PhotoImage(file = iconsPath + 'save_as.gif')
+exitMenuIcon = PhotoImage(file = iconsPath + 'exit.gif')
+undoMenuIcon = PhotoImage(file = iconsPath + 'undo.gif')
+redoMenuIcon = PhotoImage(file = iconsPath + 'redo.gif')
+cutMenuIcon = PhotoImage(file = iconsPath + 'cut.gif')
+copyMenuIcon = PhotoImage(file = iconsPath + 'copy.gif')
+pasteMenuIcon = PhotoImage(file = iconsPath + 'paste.gif')
+findMenuIcon = PhotoImage(file = iconsPath + 'find.gif')
+newMenuIcon = PhotoImage(file = iconsPath + 'new.gif')
+sendMenuIcon = PhotoImage(file = iconsPath + 'send.gif')
+exportMenuIcon = PhotoImage(file = iconsPath + 'exportToResize.gif').subsample(3,3) # resizing
+saveMenuIcon = PhotoImage(file = iconsPath + 'saveToResize.gif').subsample(3,3) # resizing
 
 # defining "Edit" functions
 def undo():
@@ -317,24 +315,24 @@ def search_for(needle,cssnstv, textPad, t2,e) :
 menubar = Menu(root)
 # File menu
 filemenu = Menu(menubar, tearoff=0 )
-filemenu.add_command(label = "New (clear screen)", accelerator = 'Cmd+N', compound = LEFT, image = small_new, underline = 0, command = new_file)
-filemenu.add_command(label = "Save", accelerator = 'Cmd+S',compound = LEFT, image = small_save,underline = 0, command=saveBig)
-filemenu.add_command(label = "Save as",accelerator = 'Shift+Ctrl+S', compound = LEFT, image = small_save_as,underline = 0, command=save_as_function)
-filemenu.add_command(label = "Export to CSV",accelerator = 'Ctrl+E', compound = LEFT, image = small_export,underline = 0, command=exportBig)
+filemenu.add_command(label = "New (clear screen)", accelerator = 'Cmd+N', compound = LEFT, image = newMenuIcon, underline = 0, command = new_file)
+filemenu.add_command(label = "Save", accelerator = 'Cmd+S',compound = LEFT, image = saveMenuIcon,underline = 0, command=saveBig)
+filemenu.add_command(label = "Save as",accelerator = 'Shift+Ctrl+S', compound = LEFT, image = saveAsMenuIcon,underline = 0, command=save_as_function)
+filemenu.add_command(label = "Export to CSV",accelerator = 'Ctrl+E', compound = LEFT, image = exportMenuIcon,underline = 0, command=exportBig)
 filemenu.add_separator()
-filemenu.add_command(label = "Exit", accelerator = 'Alt+F4', compound = LEFT, image = small_exit,underline = 0, command = exit_editor)
+filemenu.add_command(label = "Exit", accelerator = 'Alt+F4', compound = LEFT, image = exitMenuIcon,underline = 0, command = exit_editor)
 menubar.add_cascade(label = "File", menu = filemenu) # all file menu choices will be placed here
 
 # Edit menu
 editmenu = Menu(menubar, tearoff = 0)
-editmenu.add_command(label="Undo",compound=LEFT,  image=small_undo, accelerator='Cmd+Z', command = undo)
-editmenu.add_command(label="Redo",compound=LEFT,  image=small_redo, accelerator='Cmd+Y', command = redo)
+editmenu.add_command(label="Undo",compound=LEFT,  image=undoMenuIcon, accelerator='Cmd+Z', command = undo)
+editmenu.add_command(label="Redo",compound=LEFT,  image=redoMenuIcon, accelerator='Cmd+Y', command = redo)
 editmenu.add_separator()
-editmenu.add_command(label="Cut", compound=LEFT, image=small_cut, accelerator='Cmd+X', command = cut)
-editmenu.add_command(label="Copy", compound=LEFT, image=small_copy,  accelerator='Cmd+C', command = copy)
-editmenu.add_command(label="Paste",compound=LEFT, image=small_paste, accelerator='Cmd+V', command = paste)
+editmenu.add_command(label="Cut", compound=LEFT, image=cutMenuIcon, accelerator='Cmd+X', command = cut)
+editmenu.add_command(label="Copy", compound=LEFT, image=copyMenuIcon,  accelerator='Cmd+C', command = copy)
+editmenu.add_command(label="Paste",compound=LEFT, image=pasteMenuIcon, accelerator='Cmd+V', command = paste)
 editmenu.add_separator()
-editmenu.add_command(label="Find", compound=LEFT, image=small_find, underline= 0, accelerator='Cmd+F', command=on_find)
+editmenu.add_command(label="Find", compound=LEFT, image=findMenuIcon, underline= 0, accelerator='Cmd+F', command=on_find)
 editmenu.add_separator()
 menubar.add_cascade(label = "Edit ", menu=editmenu)
 
