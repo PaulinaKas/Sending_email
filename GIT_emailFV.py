@@ -261,15 +261,15 @@ def sendBig():
 			super().__init__(*args, **kwargs)
 
 		def move(self):
-			with open(self.contentToSend, encoding='utf-8') as csvfile:
-				csv_file = csv.reader(csvfile, delimiter =';')
-				for item in csv_file:
-					InvoiceNumber = '*' + str.lstrip(item[2]) + '*'
-					for file in os.listdir(self.attachmentsDirectory):
-						if fnmatch.fnmatch(file, InvoiceNumber):
+			with open(self.contentToSend, encoding='utf-8') as openedContentToSend:
+				readContent = csv.reader(openedContentToSend, delimiter =';')
+				for row in readContent:
+					InvoiceNumber = '*' + str.lstrip(row[2]) + '*'
+					for doc in os.listdir(self.attachmentsDirectory):
+						if fnmatch.fnmatch(doc, InvoiceNumber):
 							if '.DS_Store' in self.archiveForAttachmentsPath:
 									os.remove(self.archiveForAttachmentsPath + '.DS_Store')
-							shutil.move(self.attachmentsDirectory + file, self.archiveForAttachmentsPath)
+							shutil.move(self.attachmentsDirectory + doc, self.archiveForAttachmentsPath)
 
 	moving = Moving(attachmentsDirectory,
 					archiveForAttachmentsPath,
