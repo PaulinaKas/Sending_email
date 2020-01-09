@@ -64,7 +64,7 @@ def asksaveasFile():
 
 file_that_must_be_opened = sensitiveData.iloc[6][1]
 
-def export1():
+def exportBig():
 	root.clipboard_clear()
 	with open(file_that_must_be_opened, encoding='utf-8') as f:
 		content = f.readlines()
@@ -86,7 +86,7 @@ def new_file(self):
 	filename = None
 	textPad.delete(1.0,END)
 
-def open():
+def openBig():
 	filename = open(file_that_must_be_opened)
 	for line in filename:
 		textPad.insert(END, line)
@@ -99,7 +99,7 @@ def save_as_function():
 	filename.write(textoutput)
 	filename.close()
 
-def save1():
+def saveBig():
 	f = open(file_that_must_be_opened, 'w')
 	letter = textPad.get(1.0, 'end')
 	f.write(letter)
@@ -132,7 +132,7 @@ def save_menu_bar(event=None):
 
 # below is a big function which sends e-mail with proper title, body and attachments.
 # in addition "send1" function moves sent attachments to archival directory
-def send1():
+def sendBig():
 	class Subject:
 		subject_dict = {1: 'wtorek',
 						2: 'środę',
@@ -360,7 +360,7 @@ root.bind('<Command-s>', save1)
 
 # toolbar
 shortcutbar = Frame(root, height=25, bg='gainsboro')
-icons = ['open', 'save1', 'export1', 'send1']
+icons = ['openBig', 'saveBig', 'exportBig', 'sendBig']
 for i, icon in enumerate(icons):
 	tbicon = PhotoImage(file='pictures/'+icon+'.gif')
 	cmd = eval(icon)
