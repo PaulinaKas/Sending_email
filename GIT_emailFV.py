@@ -278,14 +278,14 @@ def sendBig():
 	moving.move()
 
 	class Preparing():
-		def __init__(self, file_to_edit):
-			self.file_to_edit = file_to_edit
+		def __init__(self, fileToOpen):
+			self.fileToOpen = fileToOpen
+
 		def prepare(self):
-			with open(self.file_to_edit, 'a') as txtfile:
-				txtfile.write('---------------------------------')
+			with open(self.fileToOpen, 'a') as file:
+				file.write('---------------------------------')
 	preparing = Preparing(fileToOpen)
 	preparing.prepare()
-
 
 	os.remove(contentToSend) #removes file to save memory
 
@@ -302,10 +302,11 @@ def on_find(self):
 		c=IntVar()
 		Checkbutton(t2, text='Ignore Case', variable=c).grid(row=1, column=1, sticky='e', padx=2, pady=2)
 		Button(t2, text="Find All", underline=0,  command=lambda: search_for(v.get(),c.get(), textPad, t2,e)).grid(row=0, column=2, sticky='e'+'w', padx=2, pady=2)
-		#t2.bind('<Return>', lambda: search_for(v.get(), c.get(), textPad, t2,e))
+
 		def close_search():
 				textPad.tag_remove('match', '1.0', END)
 				t2.destroy()
+
 		t2.protocol('WM_DELETE_WINDOW', close_search)
 
 def search_for(needle,cssnstv, textPad, t2,e) :
@@ -335,7 +336,7 @@ filemenu.add_command(label = "Save as",accelerator = 'Shift+Ctrl+S', compound = 
 filemenu.add_command(label = "Export to CSV",accelerator = 'Ctrl+E', compound = LEFT, image = exportMenuIcon,underline = 0, command=exportBig)
 filemenu.add_separator()
 filemenu.add_command(label = "Exit", accelerator = 'Alt+F4', compound = LEFT, image = exitMenuIcon,underline = 0, command = exit_editor)
-menubar.add_cascade(label = "File", menu = filemenu) # all file menu choices will be placed here
+menubar.add_cascade(label = "File", menu = filemenu)
 
 # Edit menu
 editmenu = Menu(menubar, tearoff = 0)
@@ -350,7 +351,7 @@ editmenu.add_command(label="Find", compound=LEFT, image=findMenuIcon, underline=
 editmenu.add_separator()
 menubar.add_cascade(label = "Edit ", menu=editmenu)
 
-root.config(menu = menubar) # this line displats menu on the top of the root window
+root.config(menu = menubar) # this line displays menu on the top of the root window
 
 lnlabel = Label(root,  width=2,  bg = 'white') # is responsible for white strip on the left
 lnlabel.pack(side=LEFT, anchor='nw', fill=Y)
