@@ -26,10 +26,10 @@ sensitiveData = pd.read_excel('private.xlsx')
 
 iconsPath = sensitiveData.iloc[0][1]
 
-open_picture = PhotoImage(file = iconsPath + 'open.gif')
-save_picture = PhotoImage(file = iconsPath + 'save1.gif')
-send_picture = PhotoImage(file = iconsPath + 'send1.gif')
-export_picture = PhotoImage(file = iconsPath + 'export1.gif')
+openButtonIcon = PhotoImage(file = iconsPath + 'open.gif')
+saveButtonIcon = PhotoImage(file = iconsPath + 'save1.gif')
+sendButtonIcon = PhotoImage(file = iconsPath + 'send1.gif')
+exportButtonIcon = PhotoImage(file = iconsPath + 'export1.gif')
 small_save_as = PhotoImage(file = iconsPath + 'save_as.gif')
 small_exit = PhotoImage(file = iconsPath + 'exit.gif')
 small_undo = PhotoImage(file = iconsPath + 'undo.gif')
