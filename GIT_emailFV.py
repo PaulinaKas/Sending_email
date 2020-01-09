@@ -26,21 +26,10 @@ sensitiveData = pd.read_excel('private.xlsx')
 
 iconsPath = sensitiveData.iloc[0][1]
 
-
-# openButtonIcon = PhotoImage(file = iconsPath + 'openBig.gif')
-# saveButtonIcon = PhotoImage(file = iconsPath + 'saveBig.gif')
-# sendButtonIcon = PhotoImage(file = iconsPath + 'sendBig.gif')
-# exportButtonIcon = PhotoImage(file = iconsPath + 'exportBig.gif')
-
-expectingNames = {'openButtonIcon':'openBig.gif',
-				  'saveButtonIcon':'saveBig.gif',
-				  'sendButtonIcon':'sendBig.gif',
-				  'exportButtonIcon':'exportBig.gif',}
-
-def IconVariablesCreator(names):
-	for i in names.keys():
-		vars()[i] = PhotoImage(file = iconsPath + names.get(i))
-IconVariablesCreator(expectingNames)
+openButtonIcon = PhotoImage(file = iconsPath + 'openBig.gif')
+saveButtonIcon = PhotoImage(file = iconsPath + 'saveBig.gif')
+sendButtonIcon = PhotoImage(file = iconsPath + 'sendBig.gif')
+exportButtonIcon = PhotoImage(file = iconsPath + 'exportBig.gif')
 
 
 small_save_as = PhotoImage(file = iconsPath + 'save_as.gif')
