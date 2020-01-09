@@ -24,7 +24,7 @@ sensitiveData = pd.read_excel('private.xlsx')
 
 # Images for icons:
 
-path_to_pictures = sensitiveData.iloc[0][1] #path where pictures are saved
+path_to_pictures = sensitiveData.iloc[0][1] 
 
 open_picture = PhotoImage(file = path_to_pictures + 'open1.gif')
 save_picture = PhotoImage(file = path_to_pictures + 'save1.gif')
