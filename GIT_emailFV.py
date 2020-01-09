@@ -64,10 +64,16 @@ def asksaveasFile():
 fileToBeEditing = sensitiveData.iloc[6][1]
 
 def exportBig():
+	'''
+	Info:
+	Something like '---------------------------------' separates content
+	to send from content that has been send last time.
+	Below variable "index" is set of rows that equal to '---------------------------------'.
+	Thanks to it program can distinguish last new content that must be send.
+	'''
 	root.clipboard_clear()
 	with open(fileToBeEditing, encoding='utf-8') as file:
 		fileContent = file.readlines()
-		# '---------------------------------' separates content of emails to send
 		index = [x for x in range(len(fileContent)) if '---------------------------------' in fileContent[x]]
 	filename = filedialog.asksaveasfile(initialfile='export.csv', mode='w', defaultextension='.csv')
 	if filename is None:
