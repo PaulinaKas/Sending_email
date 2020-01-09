@@ -21,8 +21,8 @@ root.geometry('850x500') # sets size of root window
 root.title("Sending e-mail")
 Label(root, text='Please use below syntax:\n ;firm name; invoice no.; route; loading date / unloading date; number of CMR files; postal address; other information \n', fg='#19334d').pack(padx=0)
 
+# Variables for sensitive data
 sensitiveData = pd.read_excel('private.xlsx')
-
 iconsPath = sensitiveData.iloc[0][1]
 attachmentsDirectory = sensitiveData.iloc[1][1]
 senderMailAddress = sensitiveData.iloc[2][1]
@@ -33,10 +33,7 @@ fileToOpen = sensitiveData.iloc[6][1]
 contentToSend = sensitiveData.iloc[7][1]
 archiveForAttachmentsPath = sensitiveData.iloc[5][1]
 
-
-
-'''Images for icons:'''
-
+# Images for icons
 openButtonIcon = PhotoImage(file = iconsPath + 'openBig.gif')
 saveButtonIcon = PhotoImage(file = iconsPath + 'saveBig.gif')
 sendButtonIcon = PhotoImage(file = iconsPath + 'sendBig.gif')
