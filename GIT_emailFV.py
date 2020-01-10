@@ -51,17 +51,31 @@ sendMenuIcon = PhotoImage(file = iconsPath + 'send.gif')
 exportMenuIcon = PhotoImage(file = iconsPath + 'exportToResize.gif').subsample(3,3) # resizing
 saveMenuIcon = PhotoImage(file = iconsPath + 'saveToResize.gif').subsample(3,3) # resizing
 
-# defining "Edit" functions
-def undo():
-	textPad.event_generate("<<Undo>>")
-def redo():
-	textPad.event_generate("<<Redo>>")
-def cut():
-	textPad.event_generate("<<Cut>>")
-def copy():
-	textPad.event_generate("<<Copy>>")
-def paste():
-	textPad.event_generate("<<Paste>>")
+menubar = Menu(root)
+root.config(menu = menubar) # this line displays menu on the top of the root window
+
+lnlabel = Label(root,  width=2,  bg = 'white') # is responsible for white strip on the left
+lnlabel.pack(side=LEFT, anchor='nw', fill=Y)
+
+# adding Text Widget & ScrollBar widget
+textPad = Text(root, undo=True)
+textPad.pack(expand=YES, fill=BOTH)
+scroll=Scrollbar(textPad)
+textPad.configure(yscrollcommand=scroll.set)
+scroll.config(command=textPad.yview)
+scroll.pack(side=RIGHT,fill=Y)
+
+class EditMenu:
+	def undo():
+		textPad.event_generate("<<Undo>>")
+	def redo():
+		textPad.event_generate("<<Redo>>")
+	def cut():
+		textPad.event_generate("<<Cut>>")
+	def copy():
+		textPad.event_generate("<<Copy>>")
+	def paste():
+		textPad.event_generate("<<Paste>>")
 
 # defining functions that will be needed for "exportBig()" and "":
 def askopenfile():
@@ -324,7 +338,7 @@ def search_for(needle,cssnstv, textPad, t2,e) :
 
 
 
-menubar = Menu(root)
+
 # File menu
 filemenu = Menu(menubar, tearoff=0 )
 filemenu.add_command(label = "New (clear screen)", accelerator = 'Cmd+N', compound = LEFT, image = newMenuIcon, underline = 0, command = new_file)
@@ -337,29 +351,20 @@ menubar.add_cascade(label = "File", menu = filemenu)
 
 # Edit menu
 editmenu = Menu(menubar, tearoff = 0)
-editmenu.add_command(label="Undo",compound=LEFT,  image=undoMenuIcon, accelerator='Cmd+Z', command = undo)
-editmenu.add_command(label="Redo",compound=LEFT,  image=redoMenuIcon, accelerator='Cmd+Y', command = redo)
+editmenu.add_command(label="Undo",compound=LEFT,  image=undoMenuIcon, accelerator='Cmd+Z', command = EditMenu.undo())
+editmenu.add_command(label="Redo",compound=LEFT,  image=redoMenuIcon, accelerator='Cmd+Y', command = EditMenu.redo())
 editmenu.add_separator()
-editmenu.add_command(label="Cut", compound=LEFT, image=cutMenuIcon, accelerator='Cmd+X', command = cut)
-editmenu.add_command(label="Copy", compound=LEFT, image=copyMenuIcon,  accelerator='Cmd+C', command = copy)
-editmenu.add_command(label="Paste",compound=LEFT, image=pasteMenuIcon, accelerator='Cmd+V', command = paste)
+editmenu.add_command(label="Cut", compound=LEFT, image=cutMenuIcon, accelerator='Cmd+X', command = EditMenu.cut())
+editmenu.add_command(label="Copy", compound=LEFT, image=copyMenuIcon,  accelerator='Cmd+C', command = EditMenu.copy())
+editmenu.add_command(label="Paste",compound=LEFT, image=pasteMenuIcon, accelerator='Cmd+V', command = EditMenu.paste())
 editmenu.add_separator()
-editmenu.add_command(label="Find", compound=LEFT, image=findMenuIcon, underline= 0, accelerator='Cmd+F', command=on_find)
+editmenu.add_command(label="Find", compound=LEFT, image=findMenuIcon, underline=0, accelerator='Cmd+F', command=on_find)
 editmenu.add_separator()
 menubar.add_cascade(label = "Edit ", menu=editmenu)
 
-root.config(menu = menubar) # this line displays menu on the top of the root window
 
-lnlabel = Label(root,  width=2,  bg = 'white') # is responsible for white strip on the left
-lnlabel.pack(side=LEFT, anchor='nw', fill=Y)
 
-# adding Text Widget & ScrollBar widget
-textPad = Text(root, undo=True)
-textPad.pack(expand=YES, fill=BOTH)
-scroll=Scrollbar(textPad)
-textPad.configure(yscrollcommand=scroll.set)
-scroll.config(command=textPad.yview)
-scroll.pack(side=RIGHT,fill=Y)
+
 
 # binding events
 root.bind('<Command-f>', on_find)
