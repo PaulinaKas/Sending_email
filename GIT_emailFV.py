@@ -66,16 +66,18 @@ scroll.config(command=textPad.yview)
 scroll.pack(side=RIGHT,fill=Y)
 
 class EditMenu:
-	def undo():
+	def undo(self):
 		textPad.event_generate("<<Undo>>")
-	def redo():
+	def redo(self):
 		textPad.event_generate("<<Redo>>")
-	def cut():
+	def cut(self):
 		textPad.event_generate("<<Cut>>")
-	def copy():
+	def copy(self):
 		textPad.event_generate("<<Copy>>")
-	def paste():
+	def paste(self):
 		textPad.event_generate("<<Paste>>")
+
+editMenuObject = EditMenu()
 
 class FileMenu:
 	'''
@@ -353,12 +355,12 @@ menubar.add_cascade(label = "File", menu = filemenu)
 
 # Edit menu
 editmenu = Menu(menubar, tearoff = 0)
-editmenu.add_command(label="Undo",compound=LEFT,  image=undoMenuIcon, accelerator='Cmd+Z', command = EditMenu.undo())
-editmenu.add_command(label="Redo",compound=LEFT,  image=redoMenuIcon, accelerator='Cmd+Y', command = EditMenu.redo())
+editmenu.add_command(label="Undo",compound=LEFT,  image=undoMenuIcon, accelerator='Cmd+Z', command = editMenuObject.undo)
+editmenu.add_command(label="Redo",compound=LEFT,  image=redoMenuIcon, accelerator='Cmd+Y', command = editMenuObject.redo)
 editmenu.add_separator()
-editmenu.add_command(label="Cut", compound=LEFT, image=cutMenuIcon, accelerator='Cmd+X', command = EditMenu.cut())
-editmenu.add_command(label="Copy", compound=LEFT, image=copyMenuIcon,  accelerator='Cmd+C', command = EditMenu.copy())
-editmenu.add_command(label="Paste",compound=LEFT, image=pasteMenuIcon, accelerator='Cmd+V', command = EditMenu.paste())
+editmenu.add_command(label="Cut", compound=LEFT, image=cutMenuIcon, accelerator='Cmd+X', command = editMenuObject.cut)
+editmenu.add_command(label="Copy", compound=LEFT, image=copyMenuIcon,  accelerator='Cmd+C', command = editMenuObject.copy)
+editmenu.add_command(label="Paste",compound=LEFT, image=pasteMenuIcon, accelerator='Cmd+V', command = editMenuObject.paste)
 editmenu.add_separator()
 editmenu.add_command(label="Find", compound=LEFT, image=findMenuIcon, underline=0, accelerator='Cmd+F', command=on_find)
 editmenu.add_separator()
