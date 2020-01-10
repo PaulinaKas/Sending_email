@@ -132,25 +132,6 @@ def saveBig():
 	if MsgBox == 'No':
 		messagebox.showinfo('No','You will now return to the application screen')
 
-
-# def write_to_file(fileToWrite):
-# 	fileToWrite = None
-# 	try:
-# 		fromFirstLineContent = content_text.get(1.0, END)
-# 		with open(file_name, 'w') as file:
-# 			file.write(fromFirstLineContent)
-# 	except IOError:
-# 		tkinter.messagebox.showwarning("Save", "Could not save the file.")
-#
-# def save_menu_bar(event=None):
-# 	fileToWrite = None
-# 	if not file_name:
-# 		save_as_function()
-# 	else:
-# 		write_to_file(fileToWrite)
-# 	return "break"
-
-
 def sendBig():
 	'''
 	Below is a big function which sends e-mail with proper title, body and attachments.
