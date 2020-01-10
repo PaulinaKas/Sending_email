@@ -68,7 +68,7 @@ scroll.pack(side=RIGHT,fill=Y)
 class EditMenu:
 	def undo(self):
 		textPad.event_generate("<<Undo>>")
-	def redo(self): 
+	def redo(self):
 		textPad.event_generate("<<Redo>>")
 	def cut(self):
 		textPad.event_generate("<<Cut>>")
@@ -132,23 +132,23 @@ def saveBig():
 	if MsgBox == 'No':
 		messagebox.showinfo('No','You will now return to the application screen')
 
-# Function that is needed for "save_menu_bar"
-def write_to_file(fileToWrite):
-	fileToWrite = None
-	try:
-		fromFirstLineContent = content_text.get(1.0, END)
-		with open(file_name, 'w') as file:
-			file.write(fromFirstLineContent)
-	except IOError:
-		tkinter.messagebox.showwarning("Save", "Could not save the file.")
 
-def save_menu_bar(event=None):
-	fileToWrite = None
-	if not file_name:
-		save_as_function()
-	else:
-		write_to_file(fileToWrite)
-	return "break"
+# def write_to_file(fileToWrite):
+# 	fileToWrite = None
+# 	try:
+# 		fromFirstLineContent = content_text.get(1.0, END)
+# 		with open(file_name, 'w') as file:
+# 			file.write(fromFirstLineContent)
+# 	except IOError:
+# 		tkinter.messagebox.showwarning("Save", "Could not save the file.")
+#
+# def save_menu_bar(event=None):
+# 	fileToWrite = None
+# 	if not file_name:
+# 		save_as_function()
+# 	else:
+# 		write_to_file(fileToWrite)
+# 	return "break"
 
 
 def sendBig():
