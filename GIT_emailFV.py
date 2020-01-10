@@ -94,188 +94,190 @@ class FileMenu:
 
 fileMenuObject = FileMenu()
 
-def exportBig():
-	'''
-	Info:
-	Something like '---------------------------------' separates content
-	to send from content that has been send last time.
-	Below variable "separatingIndex" is set of rows that equal to '---------------------------------'.
-	Thanks to it program can distinguish last new content that must be send.
-	'''
-	root.clipboard_clear()
-	with open(fileToOpen, encoding='utf-8') as file:
-		fileContent = file.readlines()
-		separatingIndex = [x for x in range(len(fileContent)) if '---------------------------------' in fileContent[x]]
-	fileToExport = filedialog.asksaveasfile(initialfile='export.csv', mode='w', defaultextension='.csv')
-	if fileToExport is None: # asksaveasfile returns `None` if dialog closed with "cancel".
-		return
-	newContent = textPad.get(float(separatingIndex[-1]+2), END)
-	fileToExport.write(newContent)
-	fileToExport.close()
+class BottomToolbar:
+	def openBig(self):
+		fileContent = open(fileToOpen)
+		for line in fileContent:
+			textPad.insert(END, line)
+
+	def saveBig(self):
+		openedFile = open(fileToOpen, 'w')
+		fromFirstLineContent = textPad.get(1.0, END)
+		openedFile.write(fromFirstLineContent)
+		MsgBox = messagebox.askquestion('Warning','Are you sure you want to overwrite the file?', icon = 'warning')
+		if MsgBox == 'Yes':
+			try:
+				f.close()
+			except:
+				save_as_function()
+		if MsgBox == 'No':
+			messagebox.showinfo('No','You will now return to the application screen')
+
+	def exportBig(self):
+		'''
+		Info:
+		Something like '---------------------------------' separates content
+		to send from content that has been send last time.
+		Below variable "separatingIndex" is set of rows that equal to '---------------------------------'.
+		Thanks to it program can distinguish last new content that must be send.
+		'''
+		root.clipboard_clear()
+		with open(fileToOpen, encoding='utf-8') as file:
+			fileContent = file.readlines()
+			separatingIndex = [x for x in range(len(fileContent)) if '---------------------------------' in fileContent[x]]
+		fileToExport = filedialog.asksaveasfile(initialfile='export.csv', mode='w', defaultextension='.csv')
+		if fileToExport is None: # asksaveasfile returns `None` if dialog closed with "cancel".
+			return
+		newContent = textPad.get(float(separatingIndex[-1]+2), END)
+		fileToExport.write(newContent)
+		fileToExport.close()
+
+	def sendBig(self):
+		'''
+		Below is a big function which sends e-mail with proper title, body and attachments.
+		'''
+		class Subject:
+			weekDictionary = {	1: 'wtorek',
+								2: 'środę',
+								3: 'czwartek',
+								4: 'piątek',
+								5: 'niedzielę',
+								6: 'niedzielę',
+								7: 'niedzielę',}
+			def __init__(self, weekday):
+				self.weekday = weekday
+
+			def createSubject(self):
+				return f"Fakturki na {Subject.weekDictionary.get(self.weekday)}"
+
+		subject = Subject(date.today().isoweekday())
+		msg = MIMEMultipart()
+		msg['Subject'] = subject.createSubject()
+
+		class Body:
+			def __init__(self, contentToSend, attachmentsDirectory):
+				self.contentToSend = contentToSend
+				self.attachmentsDirectory = attachmentsDirectory
+
+			def createBody(self):
+				mailBody = '<font face="verdana, monospace">' + "Cześć tatuś, oto fakturki :)" + \
+						  '</font>' +  "<br>"
+				with open(self.contentToSend, encoding='utf-8') as file:
+					content = csv.reader(file, delimiter =';')
+
+					for row in content:
+						if row[0] != 'sent':
+							mailBody += '<font face="verdana, monospace">' + "<br>" + \
+							"   - " + '<b>' + row[1] + ' '+ '</b>' + row[2] + ' ' + \
+							row[3] + ' ' + row[4] + '<b>' + '<font color="MidnightBlue">' + \
+							row[5] + ' ' + '</font>' + '<font color="MediumVioletRed">' + \
+							row [6] + ' ' +  '<font color="OrangeRed">' + row[7] + ' ' + \
+							'</font>' + '</font>' + '</b> <br>'
+
+							# row[2] is the invoice number
+							InvoiceNumber = '*' + str.lstrip(row[2]) + '*' # removes spaces to the left of the row[2]
+							for doc in os.listdir(self.attachmentsDirectory):
+								if fnmatch.fnmatch(doc, InvoiceNumber):
+									attachmentPath = os.path.join(self.attachmentsDirectory, doc)
+									openedAttachmentPath = open(attachmentPath, 'rb')
+									part = MIMEBase('application', 'octet-stream')
+									part.set_payload(openedAttachmentPath.read())
+									openedAttachmentPath.close()
+									encoders.encode_base64(part)
+									part.add_header('Content-Disposition',
+													'attachment',
+													filename = os.path.basename(doc))
+									msg.attach(part)
+
+				message = mailBody
+				msg.attach(MIMEText(message, 'html'))
 
 
-def openBig():
-	fileContent = open(fileToOpen)
-	for line in fileContent:
-		textPad.insert(END, line)
+		body = Body(contentToSend,
+					attachmentsDirectory)
+		body.createBody()
 
-def saveBig():
-	openedFile = open(fileToOpen, 'w')
-	fromFirstLineContent = textPad.get(1.0, END)
-	openedFile.write(fromFirstLineContent)
-	MsgBox = messagebox.askquestion('Warning','Are you sure you want to overwrite the file?', icon = 'warning')
-	if MsgBox == 'Yes':
-		try:
-			f.close()
-		except:
-			save_as_function()
-	if MsgBox == 'No':
-		messagebox.showinfo('No','You will now return to the application screen')
+		class Sending(Body):
+			msg['From'] = senderMailAddress
+			msg['To'] = receiverMailAddress
+			def __init__(self, senderMailPassword, fileToAutoRemove, *args, **kwargs):
+				super().__init__(*args, **kwargs)
+				self.senderMailPassword = senderMailPassword
+				self.fileToAutoRemove = fileToAutoRemove # abstract file which is created and removed automatically (see Removing class)
 
-def sendBig():
-	'''
-	Below is a big function which sends e-mail with proper title, body and attachments.
-	'''
-	class Subject:
-		weekDictionary = {	1: 'wtorek',
-							2: 'środę',
-							3: 'czwartek',
-							4: 'piątek',
-							5: 'niedzielę',
-							6: 'niedzielę',
-							7: 'niedzielę',}
-		def __init__(self, weekday):
-			self.weekday = weekday
+			def sendMail(self):
+				server = smtplib.SMTP_SSL(hostofSenderMail, 465) # 465 is a port for sender's mail
+				server.ehlo()
+				server.login(msg['From'], self.senderMailPassword)
+				server.sendmail(msg['From'], msg['To'], msg.as_string())
+				server.quit()
+				shutil.copyfile(self.contentToSend, self.fileToAutoRemove)
 
-		def createSubject(self):
-			return f"Fakturki na {Subject.weekDictionary.get(self.weekday)}"
+		sendingObject = Sending(senderMailPassword,
+							  'fileToAutoRemove.csv',
+							  contentToSend,
+							  None)
+		sendingObject.sendMail()
 
-	subject = Subject(date.today().isoweekday())
-	msg = MIMEMultipart()
-	msg['Subject'] = subject.createSubject()
+		class Removing:
+			def __init__(self, archiveForAttachmentsPath, contentToSend, fileToAutoRemove):
+				self.archiveForAttachmentsPath = archiveForAttachmentsPath
+				self.contentToSend = contentToSend
+				self.fileToAutoRemove = fileToAutoRemove
 
-	class Body:
-		def __init__(self, contentToSend, attachmentsDirectory):
-			self.contentToSend = contentToSend
-			self.attachmentsDirectory = attachmentsDirectory
+			def removeAbstractFile(self):
+				openedContentToSend = open(self.contentToSend, 'r', encoding='utf-8')
+				readContent = csv.reader(openedContentToSend, delimiter=';')
+				openedFileToAutoRemove = open(self.fileToAutoRemove, 'w', encoding='utf-8', newline='')
+				writer = csv.writer(openedFileToAutoRemove,  delimiter=';')
+				for row in readContent:
+					row[0]='sent'
+					writer.writerow(row)
+				openedContentToSend.close()
+				openedFileToAutoRemove.close()
+				os.remove(self.contentToSend)
+				os.rename(self.fileToAutoRemove, self.contentToSend)
 
-		def createBody(self):
-			mailBody = '<font face="verdana, monospace">' + "Cześć tatuś, oto fakturki :)" + \
-					  '</font>' +  "<br>"
-			with open(self.contentToSend, encoding='utf-8') as file:
-				content = csv.reader(file, delimiter =';')
+		removing = Removing(archiveForAttachmentsPath,
+							contentToSend,
+							'fileToAutoRemove.csv')
+		removing.removeAbstractFile()
 
-				for row in content:
-					if row[0] != 'sent':
-						mailBody += '<font face="verdana, monospace">' + "<br>" + \
-						"   - " + '<b>' + row[1] + ' '+ '</b>' + row[2] + ' ' + \
-						row[3] + ' ' + row[4] + '<b>' + '<font color="MidnightBlue">' + \
-						row[5] + ' ' + '</font>' + '<font color="MediumVioletRed">' + \
-						row [6] + ' ' +  '<font color="OrangeRed">' + row[7] + ' ' + \
-						'</font>' + '</font>' + '</b> <br>'
+		class Moving(Removing):
+			def __init__(self, attachmentsDirectory, *args, **kwargs):
+				self.attachmentsDirectory = attachmentsDirectory
+				super().__init__(*args, **kwargs)
 
-						# row[2] is the invoice number
-						InvoiceNumber = '*' + str.lstrip(row[2]) + '*' # removes spaces to the left of the row[2]
+			def move(self):
+				with open(self.contentToSend, encoding='utf-8') as openedContentToSend:
+					readContent = csv.reader(openedContentToSend, delimiter =';')
+					for row in readContent:
+						InvoiceNumber = '*' + str.lstrip(row[2]) + '*'
 						for doc in os.listdir(self.attachmentsDirectory):
 							if fnmatch.fnmatch(doc, InvoiceNumber):
-								attachmentPath = os.path.join(self.attachmentsDirectory, doc)
-								openedAttachmentPath = open(attachmentPath, 'rb')
-								part = MIMEBase('application', 'octet-stream')
-								part.set_payload(openedAttachmentPath.read())
-								openedAttachmentPath.close()
-								encoders.encode_base64(part)
-								part.add_header('Content-Disposition',
-												'attachment',
-												filename = os.path.basename(doc))
-								msg.attach(part)
+								if '.DS_Store' in self.archiveForAttachmentsPath:
+										os.remove(self.archiveForAttachmentsPath + '.DS_Store')
+								shutil.move(self.attachmentsDirectory + doc, self.archiveForAttachmentsPath)
 
-			message = mailBody
-			msg.attach(MIMEText(message, 'html'))
-
-
-	body = Body(contentToSend,
-				attachmentsDirectory)
-	body.createBody()
-
-	class Sending(Body):
-		msg['From'] = senderMailAddress
-		msg['To'] = receiverMailAddress
-		def __init__(self, senderMailPassword, fileToAutoRemove, *args, **kwargs):
-			super().__init__(*args, **kwargs)
-			self.senderMailPassword = senderMailPassword
-			self.fileToAutoRemove = fileToAutoRemove # abstract file which is created and removed automatically (see Removing class)
-
-		def sendMail(self):
-			server = smtplib.SMTP_SSL(hostofSenderMail, 465) # 465 is a port for sender's mail
-			server.ehlo()
-			server.login(msg['From'], self.senderMailPassword)
-			server.sendmail(msg['From'], msg['To'], msg.as_string())
-			server.quit()
-			shutil.copyfile(self.contentToSend, self.fileToAutoRemove)
-
-	sendingObject = Sending(senderMailPassword,
-						  'fileToAutoRemove.csv',
-						  contentToSend,
-						  None)
-	sendingObject.sendMail()
-
-	class Removing:
-		def __init__(self, archiveForAttachmentsPath, contentToSend, fileToAutoRemove):
-			self.archiveForAttachmentsPath = archiveForAttachmentsPath
-			self.contentToSend = contentToSend
-			self.fileToAutoRemove = fileToAutoRemove
-
-		def removeAbstractFile(self):
-			openedContentToSend = open(self.contentToSend, 'r', encoding='utf-8')
-			readContent = csv.reader(openedContentToSend, delimiter=';')
-			openedFileToAutoRemove = open(self.fileToAutoRemove, 'w', encoding='utf-8', newline='')
-			writer = csv.writer(openedFileToAutoRemove,  delimiter=';')
-			for row in readContent:
-				row[0]='sent'
-				writer.writerow(row)
-			openedContentToSend.close()
-			openedFileToAutoRemove.close()
-			os.remove(self.contentToSend)
-			os.rename(self.fileToAutoRemove, self.contentToSend)
-
-	removing = Removing(archiveForAttachmentsPath,
+		moving = Moving(attachmentsDirectory,
+						archiveForAttachmentsPath,
 						contentToSend,
-						'fileToAutoRemove.csv')
-	removing.removeAbstractFile()
+						None)
+		moving.move()
 
-	class Moving(Removing):
-		def __init__(self, attachmentsDirectory, *args, **kwargs):
-			self.attachmentsDirectory = attachmentsDirectory
-			super().__init__(*args, **kwargs)
+		class Preparing():
+			def __init__(self, fileToOpen):
+				self.fileToOpen = fileToOpen
 
-		def move(self):
-			with open(self.contentToSend, encoding='utf-8') as openedContentToSend:
-				readContent = csv.reader(openedContentToSend, delimiter =';')
-				for row in readContent:
-					InvoiceNumber = '*' + str.lstrip(row[2]) + '*'
-					for doc in os.listdir(self.attachmentsDirectory):
-						if fnmatch.fnmatch(doc, InvoiceNumber):
-							if '.DS_Store' in self.archiveForAttachmentsPath:
-									os.remove(self.archiveForAttachmentsPath + '.DS_Store')
-							shutil.move(self.attachmentsDirectory + doc, self.archiveForAttachmentsPath)
+			def prepare(self):
+				with open(self.fileToOpen, 'a') as file:
+					file.write('---------------------------------')
+		preparing = Preparing(fileToOpen)
+		preparing.prepare()
 
-	moving = Moving(attachmentsDirectory,
-					archiveForAttachmentsPath,
-					contentToSend,
-					None)
-	moving.move()
+		os.remove(contentToSend) #removes file to save memory
 
-	class Preparing():
-		def __init__(self, fileToOpen):
-			self.fileToOpen = fileToOpen
-
-		def prepare(self):
-			with open(self.fileToOpen, 'a') as file:
-				file.write('---------------------------------')
-	preparing = Preparing(fileToOpen)
-	preparing.prepare()
-
-	os.remove(contentToSend) #removes file to save memory
+bottomToolbarObject = BottomToolbar()
 
 def on_find(self):
 		t2 = Toplevel(root)
@@ -314,14 +316,12 @@ def search_for(needle,cssnstv, textPad, t2,e) :
 		t2.title('%d matches found' %count)
 
 
-
-
 # File menu
 filemenu = Menu(menubar, tearoff=0 )
 filemenu.add_command(label = "New (clear screen)", accelerator = 'Cmd+N', compound = LEFT, image = newMenuIcon, underline = 0, command = fileMenuObject.new_file)
-filemenu.add_command(label = "Save", accelerator = 'Cmd+S',compound = LEFT, image = saveMenuIcon,underline = 0, command=saveBig)
+filemenu.add_command(label = "Save", accelerator = 'Cmd+S',compound = LEFT, image = saveMenuIcon,underline = 0, command=bottomToolbarObject.saveBig)
 filemenu.add_command(label = "Save as",accelerator = 'Shift+Ctrl+S', compound = LEFT, image = saveAsMenuIcon,underline = 0, command=fileMenuObject.save_as_function)
-filemenu.add_command(label = "Export to CSV",accelerator = 'Ctrl+E', compound = LEFT, image = exportMenuIcon,underline = 0, command=exportBig)
+filemenu.add_command(label = "Export to CSV",accelerator = 'Ctrl+E', compound = LEFT, image = exportMenuIcon,underline = 0, command=bottomToolbarObject.exportBig)
 filemenu.add_separator()
 filemenu.add_command(label = "Exit", accelerator = 'Alt+F4', compound = LEFT, image = exitMenuIcon,underline = 0, command = fileMenuObject.exit_editor)
 menubar.add_cascade(label = "File", menu = filemenu)
@@ -340,23 +340,20 @@ editmenu.add_separator()
 menubar.add_cascade(label = "Edit ", menu=editmenu)
 
 
-
-
-
-# binding events
+# Binding events
 root.bind('<Command-f>', on_find)
 root.bind('<Command-F>', on_find)
 root.bind('<Command-N>', fileMenuObject.new_file)
 root.bind('<Command-n>', fileMenuObject.new_file)
-root.bind('<Command-S>', saveBig)
-root.bind('<Command-s>', saveBig)
-
+root.bind('<Command-S>', bottomToolbarObject.saveBig)
+root.bind('<Command-s>', bottomToolbarObject.saveBig)
 
 # toolbar
 shortcutbar = Frame(root, height=25, bg='gainsboro')
-icons = ['openBig', 'saveBig', 'exportBig', 'sendBig']
+icons = ['bottomToolbarObject.openBig', 'bottomToolbarObject.saveBig', 'bottomToolbarObject.exportBig', 'bottomToolbarObject.sendBig']
 for i, icon in enumerate(icons):
-	tbicon = PhotoImage(file='pictures/'+icon+'.gif')
+	pathForPictures = 'pictures/'+icon+'.gif'
+	tbicon = PhotoImage(file=pathForPictures.replace('bottomToolbarObject.', ''))
 	cmd = eval(icon)
 	toolbar = Button(shortcutbar, image=tbicon, command=cmd, activeforeground='dodgerblue3')
 	toolbar.image = tbicon
