@@ -90,7 +90,7 @@ def exportBig():
 		fileContent = file.readlines()
 		separatingIndex = [x for x in range(len(fileContent)) if '---------------------------------' in fileContent[x]]
 	fileToExport = filedialog.asksaveasfile(initialfile='export.csv', mode='w', defaultextension='.csv')
-	if fileToExport is None:
+	if fileToExport is None: # asksaveasfile returns `None` if dialog closed with "cancel".
 		return
 	newContent = textPad.get(float(separatingIndex[-1]+2), END)
 	fileToExport.write(newContent)
@@ -111,11 +111,10 @@ def openBig():
 
 def save_as_function():
 	fileToSave = filedialog.asksaveasfile(mode='w', defaultextension='.txt')
-	if fileToSave is None:
-		return
 	wholeContent = textPad.get(0.0, END)
 	fileToSave.write(wholeContent)
 	fileToSave.close()
+
 
 def saveBig():
 	openedFile = open(fileToOpen, 'w')
