@@ -68,7 +68,7 @@ scroll.pack(side=RIGHT,fill=Y)
 class EditMenu:
 	def undo(self):
 		textPad.event_generate("<<Undo>>")
-	def redo(self):
+	def redo(self): 
 		textPad.event_generate("<<Redo>>")
 	def cut(self):
 		textPad.event_generate("<<Cut>>")
@@ -80,13 +80,19 @@ class EditMenu:
 editMenuObject = EditMenu()
 
 class FileMenu:
-	'''
-	Functions that should be here:
-	 - new_file()
-	 - save_as_function()
-	 - ...
-	'''
-	pass
+	def new_file(self):
+		root.title("Untitled")
+		textPad.delete(1.0,END)
+	def exit_editor(event=None):
+		if messagebox.askokcancel("Quit?", "Do you really want to exit?", icon = 'warning'):
+			root.destroy()
+	def save_as_function(self):
+		fileToSave = filedialog.asksaveasfile(mode='w', defaultextension='.txt')
+		wholeContent = textPad.get(0.0, END)
+		fileToSave.write(wholeContent)
+		fileToSave.close()
+
+fileMenuObject = FileMenu()
 
 def exportBig():
 	'''
@@ -107,25 +113,11 @@ def exportBig():
 	fileToExport.write(newContent)
 	fileToExport.close()
 
-def exit_editor(event=None):
-	if messagebox.askokcancel("Quit?", "Do you really want to exit?", icon = 'warning'):
-		root.destroy()
-
-def new_file():
-	root.title("Untitled")
-	textPad.delete(1.0,END)
 
 def openBig():
 	fileContent = open(fileToOpen)
 	for line in fileContent:
 		textPad.insert(END, line)
-
-def save_as_function():
-	fileToSave = filedialog.asksaveasfile(mode='w', defaultextension='.txt')
-	wholeContent = textPad.get(0.0, END)
-	fileToSave.write(wholeContent)
-	fileToSave.close()
-
 
 def saveBig():
 	openedFile = open(fileToOpen, 'w')
@@ -345,12 +337,12 @@ def search_for(needle,cssnstv, textPad, t2,e) :
 
 # File menu
 filemenu = Menu(menubar, tearoff=0 )
-filemenu.add_command(label = "New (clear screen)", accelerator = 'Cmd+N', compound = LEFT, image = newMenuIcon, underline = 0, command = new_file)
+filemenu.add_command(label = "New (clear screen)", accelerator = 'Cmd+N', compound = LEFT, image = newMenuIcon, underline = 0, command = fileMenuObject.new_file)
 filemenu.add_command(label = "Save", accelerator = 'Cmd+S',compound = LEFT, image = saveMenuIcon,underline = 0, command=saveBig)
-filemenu.add_command(label = "Save as",accelerator = 'Shift+Ctrl+S', compound = LEFT, image = saveAsMenuIcon,underline = 0, command=save_as_function)
+filemenu.add_command(label = "Save as",accelerator = 'Shift+Ctrl+S', compound = LEFT, image = saveAsMenuIcon,underline = 0, command=fileMenuObject.save_as_function)
 filemenu.add_command(label = "Export to CSV",accelerator = 'Ctrl+E', compound = LEFT, image = exportMenuIcon,underline = 0, command=exportBig)
 filemenu.add_separator()
-filemenu.add_command(label = "Exit", accelerator = 'Alt+F4', compound = LEFT, image = exitMenuIcon,underline = 0, command = exit_editor)
+filemenu.add_command(label = "Exit", accelerator = 'Alt+F4', compound = LEFT, image = exitMenuIcon,underline = 0, command = fileMenuObject.exit_editor)
 menubar.add_cascade(label = "File", menu = filemenu)
 
 # Edit menu
@@ -373,8 +365,8 @@ menubar.add_cascade(label = "Edit ", menu=editmenu)
 # binding events
 root.bind('<Command-f>', on_find)
 root.bind('<Command-F>', on_find)
-root.bind('<Command-N>', new_file)
-root.bind('<Command-n>', new_file)
+root.bind('<Command-N>', fileMenuObject.new_file)
+root.bind('<Command-n>', fileMenuObject.new_file)
 root.bind('<Command-S>', saveBig)
 root.bind('<Command-s>', saveBig)
 
