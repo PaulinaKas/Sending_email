@@ -100,7 +100,7 @@ def exit_editor(event=None):
 	if messagebox.askokcancel("Quit?", "Do you really want to exit?", icon = 'warning'):
 		root.destroy()
 
-def new_file(self):
+def new_file():
 	root.title("Untitled")
 	textPad.delete(1.0,END)
 
