@@ -78,6 +78,12 @@ class EditMenu:
 		textPad.event_generate("<<Paste>>")
 
 class FileMenu:
+	'''
+	Functions that should be here:
+	 - new_file()
+	 - save_as_function()
+	 - ...
+	'''
 	pass
 
 def exportBig():
