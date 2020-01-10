@@ -76,6 +76,40 @@ class EditMenu:
 		textPad.event_generate("<<Copy>>")
 	def paste(self):
 		textPad.event_generate("<<Paste>>")
+	def search_for(needle,cssnstv, textPad, t2,e) :
+			textPad.tag_remove('match', '1.0', END)
+			count =0
+			if needle:
+					pos = '1.0'
+					while True:
+						pos = textPad.search(needle, pos, nocase=cssnstv, stopindex=END)
+						if not pos: break
+						lastpos = '%s+%dc' % (pos, len(needle))
+						textPad.tag_add('match', pos, lastpos)
+						count += 1
+						pos = lastpos
+					textPad.tag_config('match', foreground='white', background='deepskyblue3')
+			e.focus_set()
+			t2.title('%d matches found' %count)
+	def on_find(self):
+			t2 = Toplevel(root)
+			t2.title('Find')
+			t2.geometry('400x100+200+250')
+			t2.transient(root)
+			Label(t2, text="Find All:").grid(row=0, column=0, sticky='e')
+			v=StringVar()
+			e = Entry(t2, width=25, textvariable=v)
+			e.grid(row=0, column=1, padx=2, pady=2, sticky='we')
+			e.focus_set()
+			c=IntVar()
+			Checkbutton(t2, text='Ignore Case', variable=c).grid(row=1, column=1, sticky='e', padx=2, pady=2)
+			Button(t2, text="Find All", underline=0,  command=lambda: EditMenu.search_for(v.get(),c.get(), textPad, t2,e)).grid(row=0, column=2, sticky='e'+'w', padx=2, pady=2)
+
+			def close_search():
+					textPad.tag_remove('match', '1.0', END)
+					t2.destroy()
+
+			t2.protocol('WM_DELETE_WINDOW', close_search)
 
 editMenuObject = EditMenu()
 
@@ -279,42 +313,6 @@ class BottomToolbar:
 
 bottomToolbarObject = BottomToolbar()
 
-def on_find(self):
-		t2 = Toplevel(root)
-		t2.title('Find')
-		t2.geometry('400x100+200+250')
-		t2.transient(root)
-		Label(t2, text="Find All:").grid(row=0, column=0, sticky='e')
-		v=StringVar()
-		e = Entry(t2, width=25, textvariable=v)
-		e.grid(row=0, column=1, padx=2, pady=2, sticky='we')
-		e.focus_set()
-		c=IntVar()
-		Checkbutton(t2, text='Ignore Case', variable=c).grid(row=1, column=1, sticky='e', padx=2, pady=2)
-		Button(t2, text="Find All", underline=0,  command=lambda: search_for(v.get(),c.get(), textPad, t2,e)).grid(row=0, column=2, sticky='e'+'w', padx=2, pady=2)
-
-		def close_search():
-				textPad.tag_remove('match', '1.0', END)
-				t2.destroy()
-
-		t2.protocol('WM_DELETE_WINDOW', close_search)
-
-def search_for(needle,cssnstv, textPad, t2,e) :
-		textPad.tag_remove('match', '1.0', END)
-		count =0
-		if needle:
-				pos = '1.0'
-				while True:
-					pos = textPad.search(needle, pos, nocase=cssnstv, stopindex=END)
-					if not pos: break
-					lastpos = '%s+%dc' % (pos, len(needle))
-					textPad.tag_add('match', pos, lastpos)
-					count += 1
-					pos = lastpos
-				textPad.tag_config('match', foreground='white', background='deepskyblue3')
-		e.focus_set()
-		t2.title('%d matches found' %count)
-
 
 # File menu
 filemenu = Menu(menubar, tearoff=0 )
@@ -328,21 +326,21 @@ menubar.add_cascade(label = "File", menu = filemenu)
 
 # Edit menu
 editmenu = Menu(menubar, tearoff = 0)
-editmenu.add_command(label="Undo",compound=LEFT,  image=undoMenuIcon, accelerator='Cmd+Z', command = editMenuObject.undo)
-editmenu.add_command(label="Redo",compound=LEFT,  image=redoMenuIcon, accelerator='Cmd+Y', command = editMenuObject.redo)
+editmenu.add_command(label="Undo",compound=LEFT, image=undoMenuIcon, accelerator='Cmd+Z', command = editMenuObject.undo)
+editmenu.add_command(label="Redo",compound=LEFT, image=redoMenuIcon, accelerator='Cmd+Y', command = editMenuObject.redo)
 editmenu.add_separator()
 editmenu.add_command(label="Cut", compound=LEFT, image=cutMenuIcon, accelerator='Cmd+X', command = editMenuObject.cut)
 editmenu.add_command(label="Copy", compound=LEFT, image=copyMenuIcon,  accelerator='Cmd+C', command = editMenuObject.copy)
 editmenu.add_command(label="Paste",compound=LEFT, image=pasteMenuIcon, accelerator='Cmd+V', command = editMenuObject.paste)
 editmenu.add_separator()
-editmenu.add_command(label="Find", compound=LEFT, image=findMenuIcon, underline=0, accelerator='Cmd+F', command=on_find)
+editmenu.add_command(label="Find", compound=LEFT, image=findMenuIcon, underline=0, accelerator='Cmd+F', command=editMenuObject.on_find)
 editmenu.add_separator()
 menubar.add_cascade(label = "Edit ", menu=editmenu)
 
 
 # Binding events
-root.bind('<Command-f>', on_find)
-root.bind('<Command-F>', on_find)
+root.bind('<Command-f>',editMenuObject.on_find)
+root.bind('<Command-F>', editMenuObject.on_find)
 root.bind('<Command-N>', fileMenuObject.new_file)
 root.bind('<Command-n>', fileMenuObject.new_file)
 root.bind('<Command-S>', bottomToolbarObject.saveBig)
