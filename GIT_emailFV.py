@@ -77,6 +77,9 @@ class EditMenu:
 	def paste():
 		textPad.event_generate("<<Paste>>")
 
+class FileMenu:
+	pass
+
 def exportBig():
 	'''
 	Info:
