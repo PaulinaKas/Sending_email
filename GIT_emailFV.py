@@ -196,7 +196,7 @@ class BottomToolbar:
         body and attachments.
         '''
         class Subject:
-            weekDictionary = {    1: 'wtorek',
+            weekDictionary = {  1: 'wtorek',
                                 2: 'środę',
                                 3: 'czwartek',
                                 4: 'piątek',
