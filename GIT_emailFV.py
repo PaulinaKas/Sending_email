@@ -114,6 +114,10 @@ class EditMenu:
 editMenuObject = EditMenu()
 
 class FileMenu:
+	'''
+	Some of tools in File Menu include in Bottom Toolbar,
+	hence functions for them are inside BottomToolbar class.
+	'''
 	def new_file(self):
 		root.title("Untitled")
 		textPad.delete(1.0,END)
