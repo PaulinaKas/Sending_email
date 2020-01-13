@@ -365,9 +365,9 @@ menubar.add_cascade(label = "File", menu = filemenu)
 # Edit menu
 editmenu = Menu(menubar, tearoff = 0)
 editmenu.add_command(label="Undo",compound=LEFT, image=undoMenuIcon,
-				     accelerator='Cmd+Z', command = editMenuObject.undo)
+					accelerator='Cmd+Z', command = editMenuObject.undo)
 editmenu.add_command(label="Redo",compound=LEFT, image=redoMenuIcon,
-					 accelerator='Cmd+Y', command = editMenuObject.redo)
+					accelerator='Cmd+Y', command = editMenuObject.redo)
 editmenu.add_separator()
 editmenu.add_command(label="Cut", compound=LEFT, image=cutMenuIcon,
 					 accelerator='Cmd+X', command = editMenuObject.cut)
