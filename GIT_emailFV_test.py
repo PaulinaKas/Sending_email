@@ -6,9 +6,13 @@ class EditMenuTest(unittest.TestCase):
         editMenuObject = EditMenu()
         self.assertTrue(editMenuObject) # checks if object of class EditMenu exists
 
-    # Given (input sitation)
-    # When (some action on this situation)
-    # Then (results check)
+    def test_(self):
+        # Given (input sitation)
+        editMenuObject = EditMenu()
+        # When (some action on this situation)
+        editMenuObject.undo()
+        # Then (results check)
+        
 
 if __name__ == '__main__':
     unittest.main()
