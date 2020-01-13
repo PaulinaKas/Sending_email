@@ -343,7 +343,7 @@ menubar.add_cascade(label = "Edit ", menu=editmenu)
 
 
 # Binding events
-root.bind('<Command-f>',editMenuObject.on_find)
+root.bind('<Command-f>', editMenuObject.on_find)
 root.bind('<Command-F>', editMenuObject.on_find)
 root.bind('<Command-N>', fileMenuObject.new_file)
 root.bind('<Command-n>', fileMenuObject.new_file)
