@@ -115,11 +115,11 @@ class EditMenu:
         t2.geometry('400x100+200+250')
         t2.transient(root)
         Label(t2, text="Find All:").grid(row=0, column=0, sticky='e')
-        v=StringVar()
+        v = StringVar()
         e = Entry(t2, width=25, textvariable=v)
         e.grid(row=0, column=1, padx=2, pady=2, sticky='we')
         e.focus_set()
-        c=IntVar()
+        c = IntVar()
         Checkbutton(t2, text='Ignore Case', variable=c).grid(row=1,
                               column=1, sticky='e', padx=2, pady=2)
         Button(t2, text="Find All", underline=0,
