@@ -79,14 +79,19 @@ scroll.pack(side=RIGHT,fill=Y)
 class EditMenu:
     def undo(self):
         textPad.event_generate("<<Undo>>")
+
     def redo(self):
         textPad.event_generate("<<Redo>>")
+
     def cut(self):
         textPad.event_generate("<<Cut>>")
+
     def copy(self):
         textPad.event_generate("<<Copy>>")
+
     def paste(self):
         textPad.event_generate("<<Paste>>")
+
     def search_for(needle,cssnstv, textPad, t2,e):
         textPad.tag_remove('match', '1.0', END)
         count =0
@@ -103,6 +108,7 @@ class EditMenu:
                                    background='deepskyblue3')
             e.focus_set()
             t2.title('%d matches found' %count)
+
     def on_find(self):
         t2 = Toplevel(root)
         t2.title('Find')
@@ -129,17 +135,15 @@ class EditMenu:
 editMenuObject = EditMenu()
 
 class FileMenu:
-    '''
-    Some of tools in File Menu include in Bottom Toolbar,
-    hence functions for them are inside BottomToolbar class.
-    '''
     def new_file(self):
         root.title("Untitled")
         textPad.delete(1.0,END)
+
     def exit_editor(event=None):
         if messagebox.askokcancel("Quit?", "Do you really want to exit?",
                                   icon = 'warning'):
             root.destroy()
+
     def save_as_function(self):
         fileToSave = filedialog.asksaveasfile(mode='w', defaultextension='.txt')
         wholeContent = textPad.get(0.0, END)
