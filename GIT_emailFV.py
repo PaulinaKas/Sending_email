@@ -1,4 +1,15 @@
 # -*- coding: utf-8 -*-
+'''
+The main core of this program are 3 classes:
+* EditMenu
+* FileMenu
+* BottomToolbar.
+EditMenu includes functions responsible for undo, redo, cut, copy, paste
+and find operations, then FileMenu includes new file, exit and save as ones.
+Some features from File menu (open, save, export to CSV, send via email)
+are common with bottom toolbar, hence they have been set in BottomToolbar class.
+'''
+
 import os
 import csv
 import encodings
