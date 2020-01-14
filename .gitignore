@@ -3,3 +3,5 @@ private.xlsx
 .DS_Store
 mock.py
 __pycache__/
+test_text.txt
+GIT_emailFV_kopia.py
