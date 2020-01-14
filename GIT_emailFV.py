@@ -153,10 +153,18 @@ class FileMenu:
 fileMenuObject = FileMenu()
 
 class BottomToolbar:
+
+    def __init__(self, plik):
+        self.plik = plik
+
     def openBig(self):
-        fileContent = open(fileToOpen)
-        for line in fileContent:
+        plik = open(self.plik)
+        for line in plik:
             textPad.insert(END, line)
+    # def openBig(self):
+    #     fileContent = open(fileToOpen)
+    #     for line in fileContent:
+    #         textPad.insert(END, line)
 
     def saveBig(self):
         openedFile = open(fileToOpen, 'w')
@@ -354,7 +362,7 @@ class BottomToolbar:
 
         os.remove(contentToSend) #removes file to save memory
 
-bottomToolbarObject = BottomToolbar()
+#bottomToolbarObject = BottomToolbar()
 
 
 # File menu
@@ -362,15 +370,15 @@ filemenu = Menu(menubar, tearoff=0 )
 filemenu.add_command(label = "New (clear screen)", accelerator = 'Cmd+N',
                      compound = LEFT, image = newMenuIcon, underline = 0,
                      command = fileMenuObject.new_file)
-filemenu.add_command(label = "Save", accelerator = 'Cmd+S',
-                     compound = LEFT, image = saveMenuIcon,underline = 0,
-                     command=bottomToolbarObject.saveBig)
+# filemenu.add_command(label = "Save", accelerator = 'Cmd+S',
+#                      compound = LEFT, image = saveMenuIcon,underline = 0,
+#                      command=bottomToolbarObject.saveBig)
 filemenu.add_command(label = "Save as",accelerator = 'Shift+Ctrl+S',
                      compound = LEFT, image = saveAsMenuIcon,underline = 0,
                      command=fileMenuObject.save_as_function)
-filemenu.add_command(label = "Export to CSV",accelerator = 'Ctrl+E',
-                     compound = LEFT, image = exportMenuIcon,underline = 0,
-                     command=bottomToolbarObject.exportBig)
+# filemenu.add_command(label = "Export to CSV",accelerator = 'Ctrl+E',
+#                      compound = LEFT, image = exportMenuIcon,underline = 0,
+#                      command=bottomToolbarObject.exportBig)
 filemenu.add_separator()
 filemenu.add_command(label = "Exit", accelerator = 'Alt+F4',
                      compound = LEFT, image = exitMenuIcon,underline = 0,
@@ -403,23 +411,38 @@ root.bind('<Command-f>', editMenuObject.on_find) # TODO: fix shorcut for searchi
 root.bind('<Command-F>', editMenuObject.on_find)
 root.bind('<Command-N>', fileMenuObject.new_file)
 root.bind('<Command-n>', fileMenuObject.new_file)
-root.bind('<Command-S>', bottomToolbarObject.saveBig)
-root.bind('<Command-s>', bottomToolbarObject.saveBig)
+# root.bind('<Command-S>', bottomToolbarObject.saveBig)
+# root.bind('<Command-s>', bottomToolbarObject.saveBig)
 
-# toolbar
-shortcutbar = Frame(root, height=25, bg='gainsboro')
-icons = ['bottomToolbarObject.openBig',
-         'bottomToolbarObject.saveBig',
-         'bottomToolbarObject.exportBig',
-         'bottomToolbarObject.sendBig']
-for i, icon in enumerate(icons):
-    pathForPictures = 'pictures/'+icon+'.gif'
-    tbicon = PhotoImage(file=pathForPictures.replace('bottomToolbarObject.', ''))
-    cmd = eval(icon)
-    toolbar = Button(shortcutbar, image=tbicon, command=cmd,
-              activeforeground='dodgerblue3')
-    toolbar.image = tbicon
-    toolbar.pack(padx=70, pady=5, side=LEFT)
-shortcutbar.pack(expand=NO, fill=X)
 
-root.mainloop()
+
+
+def main():
+
+    bottomToolbarObject = BottomToolbar(fileToOpen)
+
+    # toolbar
+    shortcutbar = Frame(root, height=25, bg='gainsboro')
+    icons = ['bottomToolbarObject.openBig',
+             'bottomToolbarObject.saveBig',
+             'bottomToolbarObject.exportBig',
+             'bottomToolbarObject.sendBig']
+
+    for i, icon in enumerate(icons):
+        pathForPictures = 'pictures/'+icon+'.gif'
+        tbicon = PhotoImage(file=pathForPictures.replace('bottomToolbarObject.', ''))
+        cmd = eval(icon)
+        toolbar = Button(shortcutbar, image=tbicon, command=cmd,
+                  activeforeground='dodgerblue3')
+        toolbar.image = tbicon
+        toolbar.pack(padx=70, pady=5, side=LEFT)
+    shortcutbar.pack(expand=NO, fill=X)
+
+    root.mainloop()
+
+
+
+
+
+if __name__ == '__main__':
+    main()
