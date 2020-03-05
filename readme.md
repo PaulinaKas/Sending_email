@@ -49,7 +49,7 @@ Additionally, the app shows warning boxes in cases like exiting without saving o
  
  Once you copy this repo on your local computer please install requirements.txt by entering in terminal: ```pip install -r requirements.txt```.
  
- The app uses specific paths, file names or email addresses. Please change them in the file: ```private.xlsx```.
+ The app uses specific paths, file names or email addresses. Please add yours in the file: ```private.xlsx```.
  
  <img src="privatexlslx-screen.png" width="900">
  
