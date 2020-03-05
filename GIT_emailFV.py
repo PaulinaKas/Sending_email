@@ -34,7 +34,6 @@ Label(root, text='Please use below syntax:\n ;firm name; invoice no.; route; loa
 
 # Variables for sensitive data
 sensitiveData = pd.read_excel('private.xlsx')
-iconsPath = sensitiveData.iloc[0][1]
 attachmentsDirectory = sensitiveData.iloc[1][1]
 senderMailAddress = sensitiveData.iloc[2][1]
 senderMailPassword = sensitiveData.iloc[4][1]
@@ -45,22 +44,22 @@ contentToSend = sensitiveData.iloc[7][1]
 archiveForAttachmentsPath = sensitiveData.iloc[5][1]
 
 # Images for icons
-openButtonIcon = PhotoImage(file = iconsPath + 'openBig.gif')
-saveButtonIcon = PhotoImage(file = iconsPath + 'saveBig.gif')
-sendButtonIcon = PhotoImage(file = iconsPath + 'sendBig.gif')
-exportButtonIcon = PhotoImage(file = iconsPath + 'exportBig.gif')
-saveAsMenuIcon = PhotoImage(file = iconsPath + 'save_as.gif')
-exitMenuIcon = PhotoImage(file = iconsPath + 'exit.gif')
-undoMenuIcon = PhotoImage(file = iconsPath + 'undo.gif')
-redoMenuIcon = PhotoImage(file = iconsPath + 'redo.gif')
-cutMenuIcon = PhotoImage(file = iconsPath + 'cut.gif')
-copyMenuIcon = PhotoImage(file = iconsPath + 'copy.gif')
-pasteMenuIcon = PhotoImage(file = iconsPath + 'paste.gif')
-findMenuIcon = PhotoImage(file = iconsPath + 'find.gif')
-newMenuIcon = PhotoImage(file = iconsPath + 'new.gif')
-sendMenuIcon = PhotoImage(file = iconsPath + 'send.gif')
-exportMenuIcon = PhotoImage(file = iconsPath + 'exportToResize.gif').subsample(3,3) # resizing
-saveMenuIcon = PhotoImage(file = iconsPath + 'saveToResize.gif').subsample(3,3) # resizing
+openButtonIcon = PhotoImage(file = 'pictures/' + 'openBig.gif')
+saveButtonIcon = PhotoImage(file = 'pictures/' + 'saveBig.gif')
+sendButtonIcon = PhotoImage(file = 'pictures/' + 'sendBig.gif')
+exportButtonIcon = PhotoImage(file = 'pictures/' + 'exportBig.gif')
+saveAsMenuIcon = PhotoImage(file = 'pictures/' + 'save_as.gif')
+exitMenuIcon = PhotoImage(file = 'pictures/' + 'exit.gif')
+undoMenuIcon = PhotoImage(file = 'pictures/' + 'undo.gif')
+redoMenuIcon = PhotoImage(file = 'pictures/' + 'redo.gif')
+cutMenuIcon = PhotoImage(file = 'pictures/' + 'cut.gif')
+copyMenuIcon = PhotoImage(file = 'pictures/' + 'copy.gif')
+pasteMenuIcon = PhotoImage(file = 'pictures/' + 'paste.gif')
+findMenuIcon = PhotoImage(file = 'pictures/' + 'find.gif')
+newMenuIcon = PhotoImage(file = 'pictures/' + 'new.gif')
+sendMenuIcon = PhotoImage(file = 'pictures/' + 'send.gif')
+exportMenuIcon = PhotoImage(file = 'pictures/' + 'exportToResize.gif').subsample(3,3) # resizing
+saveMenuIcon = PhotoImage(file = 'pictures/' + 'saveToResize.gif').subsample(3,3) # resizing
 
 menubar = Menu(root)
 root.config(menu = menubar) # this line displays menu on the top of the root window
