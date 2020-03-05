@@ -45,13 +45,18 @@ Additionally, the app shows warning boxes in cases like exiting without saving o
  ## **Setup**:
  macOS 10.14.6
  
- As I mentioned in "General info" section, this app fulfills very specific requirements. However, in case of desire to solve similar problems please follow below steps:
+ As I mentioned in "General info" section, this app fulfills very specific requirements. However, in case of desire to solve  similar problems please follow below steps:
  
- The app uses desktop paths, file names or email addresses. Please change them in the code. 
+ Once you copy this repo on your local computer please install requirements.txt by entering in terminal: ```pip install -r requirements.txt```.
+ 
+ The app uses specific paths, file names or email addresses. Please change them in the file: ```private.xlsx```.
+ 
+ <img src="privatexlslx-screen.png" width="900">
  
  Then go on to the following part:
- 1. After running the app the notepad window will appear.
- 2. Open archival .txt file by clicking on first on the left button. Now we can see the most current archival version of this file. 
+ 1. After running the app ```GIT_emailFV.py``` the notepad window will appear.
+ 2. Open archival text file by clicking on first on the left button. *If you didn't specify path to file in private.xlsx the default archival text file is ```data.txt```.*
+ Now we can see the most current archival version of this file. 
  3. Go down to the end of the file and write new data into notepad bearing in mind proper syntax (cf. begining of file).
  4. Overwrite the notepad by clicking on second on the left button or choosing appropriate icon in "File" menubar.
  5. Export file to CSV by clicking on third on the left button or choosing appropriate icon in "File" menubar. The default name of file will appear - the only thing to do is clicking "Save".
