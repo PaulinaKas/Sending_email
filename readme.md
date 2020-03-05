@@ -1,7 +1,7 @@
 # Sending e-mails app
 #### Dedicated app sending e-mails with formatted body and special attachments.
 
-<img src="readme_image.png" width="700">
+<img src="main-screen.png" width="700">
 
 ## Table of contents:
 #### * General info
@@ -59,10 +59,13 @@ Additionally, the app shows warning boxes in cases like exiting without saving o
  Now we can see the most current archival version of this file. 
  3. Go down to the end of the file and write new data into notepad bearing in mind proper syntax (cf. begining of file).
  4. Overwrite the notepad by clicking on second on the left button or choosing appropriate icon in "File" menubar.
- 5. Export file to CSV by clicking on third on the left button or choosing appropriate icon in "File" menubar. The default name of file will appear - the only thing to do is clicking "Save".
- 6. Send e-mail by clicking on the last button. 
-
-That's all ;)
+ 5. Export file to CSV by clicking on third on the left button or choosing appropriate icon in "File" menubar. Please select path where ```export.csv``` is located. 
+  <img src="export-screen.png" width="700">
+  
+ 6. The only thing to do is clicking "Save".
+ 
+ 7. Send e-mail by clicking on the last button. Your email's receiver will see email which looks like:
+  <img src="email-screen.png" width="700">
 
 ## **Status**:
 
